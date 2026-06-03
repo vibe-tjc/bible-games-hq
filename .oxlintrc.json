@@ -1,0 +1,10 @@
+{
+  "env": {
+    "browser": true,
+    "es2022": true
+  },
+  "ignorePatterns": ["dist", ".worker-dist", "node_modules"],
+  "rules": {
+    "no-console": "warn"
+  }
+}

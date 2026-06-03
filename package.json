@@ -1,0 +1,40 @@
+{
+  "name": "bible-games-hq",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && npm run build:spa-fallback",
+    "build:spa-fallback": "node scripts/copy-spa-fallback.mjs",
+    "check": "tsc -b",
+    "lint": "oxlint .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "bundle:check": "tsdown src/main.tsx --format esm --out-dir .tsdown-check"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.5.0",
+    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-router": "^1.139.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.556.0",
+    "qrcode.react": "^4.2.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tsdown/css": "~0.22.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
+    "tsdown": "^0.22.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
+  }
+}
