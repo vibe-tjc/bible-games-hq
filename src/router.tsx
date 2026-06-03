@@ -10,6 +10,10 @@ type BeatitudesSearch = {
   host?: string;
 };
 
+function optionalSearchString(value: unknown) {
+  return typeof value === "string" || typeof value === "number" ? String(value) : undefined;
+}
+
 const rootRoute = createRootRoute({
   component: () => (
     <div className="app-shell">
@@ -38,9 +42,9 @@ const beatitudesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/games/beatitudes",
   validateSearch: (search): BeatitudesSearch => ({
-    room: typeof search.room === "string" ? search.room : undefined,
-    token: typeof search.token === "string" ? search.token : undefined,
-    host: typeof search.host === "string" ? search.host : undefined,
+    room: optionalSearchString(search.room),
+    token: optionalSearchString(search.token),
+    host: optionalSearchString(search.host),
   }),
   component: BeatitudesPage,
 });

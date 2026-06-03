@@ -474,6 +474,10 @@ p {
   gap: 18px;
 }
 
+.mobile-match-board {
+  display: none;
+}
+
 .match-column {
   display: grid;
   gap: 10px;
@@ -540,6 +544,40 @@ p {
 
 .promise-card {
   min-height: 78px;
+}
+
+.mobile-question-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.mobile-question-card span,
+.mobile-question-card h2,
+.mobile-question-card small {
+  margin: 0;
+  color: #fff;
+}
+
+.mobile-question-card span {
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.mobile-question-card h2 {
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+
+.mobile-question-card small {
+  opacity: 0.86;
+}
+
+.mobile-choice-list {
+  display: grid;
+  gap: 10px;
 }
 
 .game-footer {
@@ -797,7 +835,6 @@ p {
   .hero-band,
   .host-layout,
   .answer-key li,
-  .match-board,
   .metric-grid {
     grid-template-columns: 1fr;
   }
@@ -817,10 +854,36 @@ p {
     flex-direction: column;
   }
 
+  .game-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 10px 0 12px;
+    background: linear-gradient(180deg, var(--bg) 76%, rgb(247 251 244 / 0%));
+  }
+
   .progress-summary {
     width: 100%;
     min-width: 0;
     text-align: left;
+  }
+
+  .desktop-match-board {
+    display: none;
+  }
+
+  .mobile-match-board {
+    display: grid;
+    gap: 14px;
+  }
+
+  .mobile-choice-list .match-card {
+    min-height: 64px;
+    padding: 14px;
+  }
+
+  .mobile-choice-list .match-card:disabled {
+    display: none;
   }
 }
 

@@ -165,6 +165,7 @@ function ParticipantGame({
 
   const usedBottomIds = useMemo(() => new Set(Object.values(answers)), [answers]);
   const answerCount = Object.keys(answers).length;
+  const currentMobilePair = beatitudes.find((pair) => !answers[pair.id]);
   const correctPairs = countCorrectAnswers(answers);
   const incorrectPairs = beatitudes.length - correctPairs;
   const completionRate = answerCount / beatitudes.length;
@@ -232,18 +233,26 @@ function ParticipantGame({
       .catch((error: Error) => setSubmitMessage(`送出失敗：${error.message}`));
   };
 
-  const selectBottom = (bottomId: string) => {
-    if (!selectedTop || answers[selectedTop] || usedBottomIds.has(bottomId) || completedAt) {
+  const answerPair = (pairId: string, bottomId: string) => {
+    if (answers[pairId] || usedBottomIds.has(bottomId) || completedAt) {
       return;
     }
 
-    const nextAnswers = { ...answers, [selectedTop]: bottomId };
+    const nextAnswers = { ...answers, [pairId]: bottomId };
     setAnswers(nextAnswers);
     setSelectedTop(null);
 
     if (Object.keys(nextAnswers).length === beatitudes.length) {
       finishGame(nextAnswers);
     }
+  };
+
+  const selectBottom = (bottomId: string) => {
+    if (!selectedTop) {
+      return;
+    }
+
+    answerPair(selectedTop, bottomId);
   };
 
   if (!profile) {
@@ -356,7 +365,33 @@ function ParticipantGame({
         </div>
       </div>
 
-      <div className="match-board" aria-label="八福配對遊戲">
+      <div className="mobile-match-board" aria-label="八福配對遊戲">
+        {currentMobilePair ? (
+          <>
+            <Card className="mobile-question-card">
+              <span>
+                第 {answerCount + 1} 題 / {beatitudes.length}
+              </span>
+              <h2>{currentMobilePair.blessing}</h2>
+              <small>{currentMobilePair.reference}</small>
+            </Card>
+            <div className="mobile-choice-list">
+              {bottomItems.map((pair) => (
+                <button
+                  className="match-card promise-card"
+                  disabled={usedBottomIds.has(pair.id)}
+                  key={pair.id}
+                  onClick={() => answerPair(currentMobilePair.id, pair.id)}
+                >
+                  <span>{pair.promise}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : null}
+      </div>
+
+      <div className="match-board desktop-match-board" aria-label="八福配對遊戲">
         <div className="match-column">
           <h2>上句</h2>
           {beatitudes.map((pair) => (
