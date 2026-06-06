@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { HeartHandshake, Mountain } from "lucide-react";
+import { HeartHandshake, Map, Mountain } from "lucide-react";
 
 export type GameCard = {
   id: string;
@@ -25,6 +25,14 @@ export const games: GameCard[] = [
     description: "走過三個人生階段，保留有限渴望，觀察信仰與行義在選擇中的位置。",
     href: "/games/desire-list",
     icon: HeartHandshake,
+    status: "ready",
+  },
+  {
+    id: "jesus-ministry-map",
+    title: "耶穌傳道的腳蹤",
+    description: "用互動地圖走過耶穌傳道的重要地點，查看路線、經文與每處發生的事蹟。",
+    href: "/games/jesus-ministry-map",
+    icon: Map,
     status: "ready",
   },
 ];

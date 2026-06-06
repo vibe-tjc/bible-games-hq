@@ -4,6 +4,7 @@ import { BeatitudesPage } from "./screens/BeatitudesPage";
 import { DesireListPage } from "./screens/DesireListPage";
 import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
+import { JesusMinistryMapPage } from "./screens/JesusMinistryMapPage";
 
 type BeatitudesSearch = {
   room?: string;
@@ -69,11 +70,18 @@ const desireListRoute = createRoute({
   component: DesireListPage,
 });
 
+const jesusMinistryMapRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/games/jesus-ministry-map",
+  component: JesusMinistryMapPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   beatitudesRoute,
   hostRoomRoute,
   desireListRoute,
+  jesusMinistryMapRoute,
 ]);
 
 export const router = createRouter({
