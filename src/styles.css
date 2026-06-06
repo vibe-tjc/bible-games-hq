@@ -802,6 +802,20 @@ p {
   white-space: nowrap;
 }
 
+.completion-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.completion-meta strong {
+  padding: 4px 8px;
+  color: var(--primary-strong);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
 @keyframes correct-pop {
   0% {
     transform: scale(1);

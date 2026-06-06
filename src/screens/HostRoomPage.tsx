@@ -156,9 +156,19 @@ export function HostRoomPage() {
                       {summary.completedPlayers.map((player) => (
                         <li key={player.playerId}>
                           <span>{player.displayName}</span>
-                          <small>
-                            {player.correctPairs}/{player.totalPairs} 組，
-                            {Math.round(player.elapsedMs / 1000)} 秒
+                          <small className="completion-meta">
+                            <strong>
+                              {formatPercent(
+                                player.totalPairs === 0
+                                  ? 0
+                                  : player.correctPairs / player.totalPairs,
+                              )}{" "}
+                              正確
+                            </strong>
+                            <span>
+                              {player.correctPairs}/{player.totalPairs} 組
+                            </span>
+                            <span>{Math.round(player.elapsedMs / 1000)} 秒</span>
                           </small>
                         </li>
                       ))}
