@@ -1,6 +1,7 @@
 import { Link, Outlet, createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
 import { Leaf } from "lucide-react";
 import { BeatitudesPage } from "./screens/BeatitudesPage";
+import { DesireListPage } from "./screens/DesireListPage";
 import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
 
@@ -8,6 +9,10 @@ type BeatitudesSearch = {
   room?: string;
   token?: string;
   host?: string;
+};
+
+type DesireListSearch = {
+  join?: string;
 };
 
 function optionalSearchString(value: unknown) {
@@ -55,7 +60,21 @@ const hostRoomRoute = createRoute({
   component: HostRoomPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, beatitudesRoute, hostRoomRoute]);
+const desireListRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/games/desire-list",
+  validateSearch: (search): DesireListSearch => ({
+    join: optionalSearchString(search.join),
+  }),
+  component: DesireListPage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  beatitudesRoute,
+  hostRoomRoute,
+  desireListRoute,
+]);
 
 export const router = createRouter({
   routeTree,
