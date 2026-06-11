@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import L from "leaflet";
+import maplibregl from "maplibre-gl";
 import { ArrowLeft, BookOpen, Languages, MapPin, Route } from "lucide-react";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
@@ -47,14 +47,14 @@ const pageCopy = {
       "從約旦河受洗、加利利傳道，到往耶路撒冷受難與復活。點選地圖上的地點，查看當地發生的事蹟與經文。",
     filterLabel: "篩選傳道階段",
     languageLabel: "地圖語言",
-    mapEyebrow: "真實地圖 · OpenStreetMap",
+    mapEyebrow: "真實地圖 · 可切換底圖語系",
     mapTitle: "加利利、撒馬利亞、猶太地",
     locationCount: (count: number) => `${count} 個地點`,
     eventsTitle: "在這裡發生的事",
     previous: "上一站",
     next: "下一站",
     routeTitle: "路線清單",
-    attribution: "地圖底圖：OpenStreetMap。地點為教學用近似定位。",
+    attribution: "地圖底圖：OpenFreeMap；資料：OpenStreetMap。地點為教學用近似定位。",
   },
   en: {
     langCode: "en",
@@ -65,16 +65,21 @@ const pageCopy = {
       "Follow Jesus from baptism at the Jordan, through ministry in Galilee, to Jerusalem, the cross, and the resurrection. Select a place on the map to review the events and Scripture references.",
     filterLabel: "Filter ministry phase",
     languageLabel: "Map language",
-    mapEyebrow: "Real Map · OpenStreetMap",
+    mapEyebrow: "Real Map · Switchable Map Language",
     mapTitle: "Galilee, Samaria, and Judea",
     locationCount: (count: number) => `${count} stops`,
     eventsTitle: "What happened here",
     previous: "Previous",
     next: "Next",
     routeTitle: "Route List",
-    attribution: "Base map: OpenStreetMap. Locations are approximate for teaching use.",
+    attribution:
+      "Base map: OpenFreeMap; data: OpenStreetMap. Locations are approximate for teaching use.",
   },
 } satisfies Record<MapLanguage, PageCopy>;
+
+const OPENFREEMAP_STYLE_URL = "https://tiles.openfreemap.org/styles/bright";
+const MINISTRY_ROUTE_SOURCE_ID = "ministry-route";
+const MINISTRY_ROUTE_LAYER_ID = "ministry-route-line";
 
 const phaseLabels = {
   全部: { zh: "全部", en: "All" },
@@ -331,7 +336,7 @@ export function JesusMinistryMapPage() {
               {copy.locationCount(visibleStops.length)}
             </span>
           </div>
-          <LeafletMinistryMap
+          <MapLibreMinistryMap
             language={language}
             selected={selected}
             visibleStops={visibleStops}
@@ -401,7 +406,7 @@ export function JesusMinistryMapPage() {
   );
 }
 
-function LeafletMinistryMap({
+function MapLibreMinistryMap({
   language,
   selected,
   visibleStops,
@@ -413,9 +418,11 @@ function LeafletMinistryMap({
   onSelect: (id: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef(new Map<string, L.Marker>());
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef(new Map<string, maplibregl.Marker>());
+  const markerElementsRef = useRef(new Map<string, HTMLButtonElement>());
   const onSelectRef = useRef(onSelect);
+  const [mapError, setMapError] = useState(false);
 
   onSelectRef.current = onSelect;
 
@@ -424,53 +431,49 @@ function LeafletMinistryMap({
       return;
     }
 
-    const map = L.map(containerRef.current, {
-      center: [32.18, 35.39],
-      zoom: 8,
-      minZoom: 7,
-      maxZoom: 13,
-      scrollWheelZoom: true,
-    });
+    let map: maplibregl.Map;
+    try {
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: OPENFREEMAP_STYLE_URL,
+        center: [35.39, 32.18],
+        zoom: 8,
+        minZoom: 7,
+        maxZoom: 13,
+      });
+    } catch {
+      setMapError(true);
+      return;
+    }
+
     mapRef.current = map;
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 19,
-    }).addTo(map);
-
-    const route = L.polyline(
-      ministryStops.map((stop) => [stop.lat, stop.lng]),
-      {
-        className: "leaflet-ministry-route",
-        color: "#d48b1f",
-        dashArray: "10 8",
-        opacity: 0.9,
-        weight: 5,
-      },
-    ).addTo(map);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
 
     ministryStops.forEach((stop) => {
-      const marker = L.marker([stop.lat, stop.lng], {
-        icon: createMinistryIcon(stop, false, true),
-        keyboard: true,
-        title: getMarkerTitle(stop, "zh"),
-      });
-      marker.bindTooltip(getMarkerLabel(stop, "zh"), {
-        className: "real-map-label",
-        direction: "top",
-        offset: [0, -20],
-        permanent: true,
-      });
-      marker.on("click", () => onSelectRef.current(stop.id));
-      marker.addTo(map);
+      const markerElement = createMinistryMarkerElement(stop, false, true, "zh");
+      markerElement.addEventListener("click", () => onSelectRef.current(stop.id));
+
+      const marker = new maplibregl.Marker({
+        anchor: "center",
+        element: markerElement,
+      })
+        .setLngLat([stop.lng, stop.lat])
+        .addTo(map);
+
       markersRef.current.set(stop.id, marker);
+      markerElementsRef.current.set(stop.id, markerElement);
     });
 
-    map.fitBounds(route.getBounds(), { padding: [28, 28] });
+    map.on("load", () => {
+      addMinistryRoute(map);
+      localizeBaseMap(map, "zh");
+      fitStops(map, ministryStops, 28);
+    });
 
     return () => {
       markersRef.current.clear();
+      markerElementsRef.current.clear();
       map.remove();
       mapRef.current = null;
     };
@@ -484,52 +487,62 @@ function LeafletMinistryMap({
 
     const visibleIds = new Set(visibleStops.map((stop) => stop.id));
     ministryStops.forEach((stop) => {
-      const marker = markersRef.current.get(stop.id);
-      if (!marker) {
+      const markerElement = markerElementsRef.current.get(stop.id);
+      if (!markerElement) {
         return;
       }
 
       const isSelected = stop.id === selected.id;
       const isVisible = visibleIds.has(stop.id);
-      const markerTitle = getMarkerTitle(stop, language);
-      marker.setIcon(createMinistryIcon(stop, isSelected, isVisible));
-      marker.options.title = markerTitle;
-      marker.getElement()?.setAttribute("title", markerTitle);
-      marker.getElement()?.setAttribute("aria-label", markerTitle);
-      marker.getTooltip()?.setContent(getMarkerLabel(stop, language));
-      marker.getTooltip()?.getElement()?.classList.toggle("selected", isSelected);
-      marker.getTooltip()?.getElement()?.classList.toggle("muted", !isVisible);
+      updateMinistryMarkerElement(markerElement, stop, isSelected, isVisible, language);
     });
 
     const targetStops = visibleStops.length ? visibleStops : ministryStops;
-    const bounds = L.latLngBounds(targetStops.map((stop) => [stop.lat, stop.lng]));
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { maxZoom: 10, padding: [36, 36] });
-    }
+    fitStops(map, targetStops, 36);
   }, [language, selected.id, visibleStops]);
 
   useEffect(() => {
-    mapRef.current?.panTo([selected.lat, selected.lng], { animate: true });
+    const map = mapRef.current;
+    if (!map) {
+      return;
+    }
+
+    if (map.isStyleLoaded()) {
+      localizeBaseMap(map, language);
+      return;
+    }
+
+    map.once("load", () => localizeBaseMap(map, language));
+  }, [language]);
+
+  useEffect(() => {
+    mapRef.current?.easeTo({
+      center: [selected.lng, selected.lat],
+      duration: 420,
+    });
   }, [selected.lat, selected.lng]);
 
   return (
     <div className="real-map-wrap">
-      <div className="real-map" ref={containerRef} />
+      <div className="real-map" ref={containerRef}>
+        {mapError ? (
+          <div className="real-map-fallback">
+            <strong>
+              {language === "zh"
+                ? "此瀏覽器目前無法載入互動地圖"
+                : "This browser cannot load the interactive map"}
+            </strong>
+            <span>
+              {language === "zh"
+                ? "請確認瀏覽器支援 WebGL，或改用最新版 Chrome、Safari、Edge。"
+                : "Please use a browser with WebGL support, such as a current version of Chrome, Safari, or Edge."}
+            </span>
+          </div>
+        ) : null}
+      </div>
       <div className="map-attribution-note">{pageCopy[language].attribution}</div>
     </div>
   );
-}
-
-function createMinistryIcon(stop: MinistryStop, selected: boolean, visible: boolean) {
-  return L.divIcon({
-    className: cn("real-map-marker", {
-      selected,
-      muted: !visible,
-    }),
-    html: `<span>${stop.order}</span>`,
-    iconAnchor: [18, 18],
-    iconSize: [36, 36],
-  });
 }
 
 function getStopText(stop: MinistryStop, language: MapLanguage): StopText {
@@ -558,4 +571,120 @@ function getMarkerLabel(stop: MinistryStop, language: MapLanguage) {
 function getMarkerTitle(stop: MinistryStop, language: MapLanguage) {
   const stopText = getStopText(stop, language);
   return `${stop.order}. ${stopText.place}: ${stopText.title}`;
+}
+
+function createMinistryMarkerElement(
+  stop: MinistryStop,
+  selected: boolean,
+  visible: boolean,
+  language: MapLanguage,
+) {
+  const element = document.createElement("button");
+  element.type = "button";
+  updateMinistryMarkerElement(element, stop, selected, visible, language);
+  return element;
+}
+
+function updateMinistryMarkerElement(
+  element: HTMLButtonElement,
+  stop: MinistryStop,
+  selected: boolean,
+  visible: boolean,
+  language: MapLanguage,
+) {
+  const markerTitle = getMarkerTitle(stop, language);
+  const number = document.createElement("span");
+  const label = document.createElement("strong");
+
+  element.className = cn("real-map-marker", {
+    selected,
+    muted: !visible,
+  });
+  element.title = markerTitle;
+  element.ariaLabel = markerTitle;
+  number.textContent = String(stop.order);
+  label.textContent = getMarkerLabel(stop, language);
+  element.replaceChildren(number, label);
+}
+
+function addMinistryRoute(map: maplibregl.Map) {
+  if (map.getSource(MINISTRY_ROUTE_SOURCE_ID)) {
+    return;
+  }
+
+  map.addSource(MINISTRY_ROUTE_SOURCE_ID, {
+    type: "geojson",
+    data: {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "LineString",
+        coordinates: ministryStops.map((stop) => [stop.lng, stop.lat]),
+      },
+    },
+  });
+
+  const firstSymbolLayerId = map.getStyle().layers?.find((layer) => layer.type === "symbol")?.id;
+  map.addLayer(
+    {
+      id: MINISTRY_ROUTE_LAYER_ID,
+      type: "line",
+      source: MINISTRY_ROUTE_SOURCE_ID,
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+      },
+      paint: {
+        "line-color": "#d48b1f",
+        "line-dasharray": [2, 1.6],
+        "line-opacity": 0.9,
+        "line-width": 5,
+      },
+    },
+    firstSymbolLayerId,
+  );
+}
+
+function localizeBaseMap(map: maplibregl.Map, language: MapLanguage) {
+  const expression = getBaseMapLanguageExpression(language);
+
+  map.getStyle().layers?.forEach((layer) => {
+    if (layer.type !== "symbol" || !("text-field" in (layer.layout ?? {}))) {
+      return;
+    }
+
+    map.setLayoutProperty(layer.id, "text-field", expression);
+  });
+}
+
+function getBaseMapLanguageExpression(language: MapLanguage) {
+  if (language === "zh") {
+    return [
+      "coalesce",
+      ["get", "name:zh-Hant"],
+      ["get", "name:zh"],
+      ["get", "name:zh-Hans"],
+      ["get", "name:en"],
+      ["get", "name:latin"],
+      ["get", "name"],
+    ];
+  }
+
+  return ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name"]];
+}
+
+function fitStops(map: maplibregl.Map, stops: MinistryStop[], padding: number) {
+  if (!stops.length) {
+    return;
+  }
+
+  const bounds = stops.reduce(
+    (currentBounds, stop) => currentBounds.extend([stop.lng, stop.lat]),
+    new maplibregl.LngLatBounds([stops[0].lng, stops[0].lat], [stops[0].lng, stops[0].lat]),
+  );
+
+  map.fitBounds(bounds, {
+    maxZoom: 10,
+    padding,
+  });
 }

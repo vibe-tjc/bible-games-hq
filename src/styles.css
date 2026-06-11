@@ -1328,6 +1328,27 @@ p {
   min-height: 560px;
 }
 
+.real-map-fallback {
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  color: var(--primary-strong);
+  background: #eef8e8;
+  text-align: center;
+}
+
+.real-map-fallback strong {
+  font-size: 1.05rem;
+}
+
+.real-map-fallback span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .map-attribution-note {
   padding: 8px 10px;
   color: var(--muted);
@@ -1338,6 +1359,7 @@ p {
 }
 
 .real-map-marker {
+  position: relative;
   display: grid;
   place-items: center;
   width: 36px !important;
@@ -1347,11 +1369,38 @@ p {
   border: 4px solid #fff;
   border-radius: 999px;
   box-shadow: 0 5px 14px rgb(42 81 56 / 34%);
+  cursor: pointer;
   font-weight: 900;
+}
+
+.real-map-marker:focus-visible {
+  outline: 3px solid var(--danger);
+  outline-offset: 3px;
 }
 
 .real-map-marker span {
   line-height: 1;
+}
+
+.real-map-marker strong {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  max-width: 150px;
+  padding: 4px 8px;
+  overflow: hidden;
+  color: #1f3327;
+  background: rgb(255 255 255 / 94%);
+  border: 1px solid rgb(58 111 75 / 26%);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgb(42 81 56 / 18%);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .real-map-marker.selected {
@@ -1363,46 +1412,32 @@ p {
     0 5px 14px rgb(42 81 56 / 34%);
 }
 
-.real-map-marker.muted {
-  opacity: 0.34;
-}
-
-.leaflet-ministry-route {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.leaflet-container {
-  color: var(--ink);
-  font: inherit;
-}
-
-.leaflet-tooltip.real-map-label {
-  padding: 4px 8px;
-  color: #1f3327;
-  background: rgb(255 255 255 / 94%);
-  border: 1px solid rgb(58 111 75 / 26%);
-  border-radius: 999px;
-  box-shadow: 0 4px 12px rgb(42 81 56 / 18%);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.leaflet-tooltip.real-map-label.selected {
+.real-map-marker.selected strong {
   color: #2a210c;
   background: #fff5d8;
   border-color: #e2b74c;
 }
 
-.leaflet-tooltip.real-map-label.muted {
+.real-map-marker.muted {
   opacity: 0.32;
 }
 
-.leaflet-tooltip-top.real-map-label::before {
-  border-top-color: rgb(255 255 255 / 94%);
+.maplibregl-map {
+  color: var(--ink);
+  font: inherit;
+}
+
+.maplibregl-ctrl-top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.maplibregl-ctrl-group {
+  border-radius: 6px;
+}
+
+.maplibregl-ctrl-attrib {
+  font-size: 0.7rem;
 }
 
 .map-detail-panel {
