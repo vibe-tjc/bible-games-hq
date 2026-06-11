@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { HeartHandshake, Map, Mountain } from "lucide-react";
+import { Archive, HeartHandshake, Map, Mountain } from "lucide-react";
 
 export type GameCard = {
   id: string;
@@ -33,6 +33,14 @@ export const games: GameCard[] = [
     description: "用互動地圖走過耶穌傳道的重要地點，查看路線、經文與每處發生的事蹟。",
     href: "/games/jesus-ministry-map",
     icon: Map,
+    status: "ready",
+  },
+  {
+    id: "bible-canon-archive",
+    title: "經卷歸檔",
+    description: "把聖經六十六卷歸回新舊約與九大分類書架，透過牌局熟悉正典結構。",
+    href: "/games/bible-canon-archive",
+    icon: Archive,
     status: "ready",
   },
 ];
