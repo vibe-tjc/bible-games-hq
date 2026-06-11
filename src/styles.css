@@ -29,6 +29,935 @@
   --shadow: 0 16px 40px rgb(42 81 56 / 12%);
 }
 
+.canon-game {
+  --canon-wood: #271c12;
+  --canon-wood-2: #382a1c;
+  --canon-parchment: #f5ecd4;
+  --canon-parchment-2: #e9dcbd;
+  --canon-ink: #3a2f22;
+  --canon-ink-soft: #6b5d49;
+  --canon-ot: #8c3b2e;
+  --canon-nt: #2f4f6b;
+  --canon-gold: #c9a227;
+  --canon-gold-soft: #e3c56e;
+  --canon-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 70px);
+  overflow: hidden;
+  color: var(--canon-parchment);
+  background:
+    radial-gradient(ellipse at 50% -10%, rgb(201 162 39 / 10%), transparent 55%),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 7%) 0 2px, transparent 2px 90px),
+    linear-gradient(175deg, #2e2114, var(--canon-wood) 45%, #1d140c);
+  font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+  user-select: none;
+}
+
+.canon-game * {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.canon-serif {
+  font-family: "Noto Serif TC", "Songti TC", PMingLiU, MingLiU, serif;
+}
+
+.canon-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 16px 8px;
+  background: linear-gradient(180deg, rgb(0 0 0 / 25%), transparent);
+  border-bottom: 1px solid rgb(201 162 39 / 25%);
+}
+
+.canon-title-block {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.canon-title-block h1 {
+  margin: 0;
+  color: var(--canon-gold);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+}
+
+.canon-deco {
+  color: rgb(201 162 39 / 55%);
+  font-size: 0.9em;
+}
+
+.canon-subtitle {
+  color: rgb(245 236 212 / 55%);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.canon-spacer {
+  flex: 1;
+}
+
+.canon-stats {
+  display: flex;
+  gap: 14px;
+  color: rgb(245 236 212 / 80%);
+  font-size: 0.78rem;
+}
+
+.canon-stats b {
+  color: var(--canon-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.canon-btn {
+  padding: 6px 14px;
+  color: var(--canon-parchment);
+  font: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgb(201 162 39 / 18%), rgb(201 162 39 / 5%));
+  border: 1px solid rgb(201 162 39 / 50%);
+  border-radius: 7px;
+  transition:
+    transform 120ms ease,
+    background 200ms ease;
+}
+
+.canon-btn:hover {
+  background: rgb(201 162 39 / 30%);
+}
+
+.canon-btn:active {
+  transform: scale(0.96);
+}
+
+.canon-btn:focus-visible,
+.canon-mode-card:focus-visible,
+.canon-pile:focus-visible,
+.canon-info-btn:focus-visible,
+.canon-modal-close:focus-visible {
+  outline: 2px solid var(--canon-gold);
+  outline-offset: 2px;
+}
+
+.canon-btn.primary {
+  color: #241a0d;
+  font-weight: 700;
+  background: linear-gradient(180deg, #d4af37, #a8821c);
+  border-color: #e8cf7a;
+}
+
+.canon-btn.paper {
+  color: var(--canon-ink);
+  border-color: #b8a87f;
+}
+
+.canon-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  padding: 12px 14px 4px;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.canon-shelves {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 14px;
+}
+
+.canon-easy-mode .canon-shelves {
+  grid-template-columns: 1fr 1fr;
+}
+
+.canon-testament {
+  position: relative;
+  padding: 10px 10px 12px;
+  background: linear-gradient(180deg, var(--canon-wood-2), var(--canon-wood));
+  border: 1px solid rgb(0 0 0 / 50%);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 6%),
+    0 8px 24px rgb(0 0 0 / 35%);
+}
+
+.canon-testament.ot {
+  background:
+    linear-gradient(180deg, rgb(140 59 46 / 22%), rgb(140 59 46 / 8%)),
+    linear-gradient(180deg, var(--canon-wood-2), var(--canon-wood));
+}
+
+.canon-testament.nt {
+  background:
+    linear-gradient(180deg, rgb(47 79 107 / 25%), rgb(47 79 107 / 8%)),
+    linear-gradient(180deg, var(--canon-wood-2), var(--canon-wood));
+}
+
+.canon-testament-label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+}
+
+.canon-testament.ot .canon-testament-label {
+  color: #e8a08f;
+}
+
+.canon-testament.nt .canon-testament-label {
+  color: #9fc3e0;
+}
+
+.canon-rule {
+  flex: 1;
+  height: 1px;
+  background: currentcolor;
+  opacity: 0.3;
+}
+
+.canon-count {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+.canon-piles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.canon-piles.single-pile {
+  grid-template-columns: 1fr;
+}
+
+.canon-pile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  min-height: 118px;
+  padding: 8px 4px 6px;
+  color: inherit;
+  cursor: pointer;
+  background: rgb(0 0 0 / 22%);
+  border: 1.5px dashed rgb(245 236 212 / 30%);
+  border-radius: var(--canon-radius);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.canon-pile-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.canon-testament.ot .canon-pile-name {
+  color: #f0b9aa;
+}
+
+.canon-testament.nt .canon-pile-name {
+  color: #b5d2ea;
+}
+
+.canon-pile-count {
+  color: rgb(245 236 212 / 60%);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.canon-spines {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  padding: 2px 2px 0;
+}
+
+.canon-spine {
+  position: relative;
+  width: 11px;
+  border: 1px solid rgb(0 0 0 / 40%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 1px 0 0 rgb(255 255 255 / 22%);
+  animation: canon-spine-in 350ms ease;
+}
+
+.canon-spine-txt {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  color: rgb(255 248 230 / 95%);
+  font-size: 7.5px;
+  line-height: 1;
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.canon-pile.droppable-hover {
+  background: rgb(201 162 39 / 14%);
+  border-color: var(--canon-gold);
+  box-shadow:
+    0 0 0 2px rgb(201 162 39 / 35%),
+    0 0 18px rgb(201 162 39 / 25%);
+}
+
+.canon-pile.hinted {
+  animation: canon-hint-pulse 1s ease 2;
+}
+
+.canon-pile.complete {
+  background: rgb(201 162 39 / 8%);
+  border-color: rgb(201 162 39 / 70%);
+  border-style: solid;
+}
+
+.canon-pile.complete .canon-pile-name::after {
+  color: var(--canon-gold);
+  content: " ✓";
+}
+
+.canon-pile.reject {
+  animation: canon-reject-shake 350ms ease;
+}
+
+.canon-hand-area {
+  padding: 10px 14px 14px;
+  background: linear-gradient(180deg, rgb(0 0 0 / 35%), rgb(0 0 0 / 55%));
+  border-top: 1px solid rgb(201 162 39 / 25%);
+}
+
+.canon-hand-inner {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.canon-deck-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 78px;
+  min-width: 78px;
+  height: 108px;
+  color: var(--canon-gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  background:
+    repeating-linear-gradient(45deg, rgb(201 162 39 / 12%) 0 6px, transparent 6px 12px),
+    linear-gradient(160deg, #5a4630, #3b2c1c);
+  border: 1px solid rgb(201 162 39 / 40%);
+  border-radius: 8px;
+  box-shadow:
+    2px 2px 0 #241a0e,
+    4px 4px 0 #1c130a,
+    0 6px 14px rgb(0 0 0 / 50%);
+}
+
+.canon-deck-n {
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.canon-hand {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 2px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+}
+
+.canon-hand::-webkit-scrollbar {
+  height: 6px;
+}
+
+.canon-hand::-webkit-scrollbar-thumb {
+  background: rgb(201 162 39 / 35%);
+  border-radius: 3px;
+}
+
+.canon-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  min-width: 86px;
+  height: 112px;
+  color: var(--canon-ink);
+  cursor: grab;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 80% 12%, rgb(201 162 39 / 18%), transparent 40%),
+    linear-gradient(165deg, var(--canon-parchment), var(--canon-parchment-2));
+  border: 1px solid #b8a87f;
+  border-radius: 9px;
+  box-shadow:
+    0 3px 8px rgb(0 0 0 / 45%),
+    inset 0 0 0 3px rgb(255 255 255 / 35%),
+    inset 0 0 0 4px rgb(160 135 80 / 35%);
+  animation: canon-deal-in 300ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.canon-card:hover {
+  transform: translateY(-4px);
+}
+
+.canon-card.selected {
+  box-shadow:
+    0 0 0 3px var(--canon-gold),
+    0 10px 18px rgb(0 0 0 / 55%),
+    inset 0 0 0 3px rgb(255 255 255 / 35%);
+  transform: translateY(-10px);
+}
+
+.canon-card.dragging-source {
+  opacity: 0.25;
+}
+
+.canon-corner {
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  color: #9b8a64;
+  font-family: "Noto Serif TC", serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+.canon-info-btn {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  color: #7a6a48;
+  font-family: "Noto Serif TC", serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  background: rgb(255 255 255 / 55%);
+  border: 1px solid #b8a87f;
+  border-radius: 50%;
+}
+
+.canon-info-btn:hover {
+  color: #fff;
+  background: var(--canon-gold);
+  border-color: var(--canon-gold);
+}
+
+.canon-abbr {
+  font-family: "Noto Serif TC", "Songti TC", PMingLiU, serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+}
+
+.canon-abbr.small {
+  font-size: 1.25rem;
+}
+
+.canon-full {
+  margin-top: 3px;
+  color: var(--canon-ink-soft);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+}
+
+.canon-drag-ghost {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 55%));
+  transform: translate(-50%, -55%) rotate(-3deg) scale(1.06);
+}
+
+.canon-hand-tip {
+  margin-top: 6px;
+  color: rgb(245 236 212 / 45%);
+  font-size: 0.68rem;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+
+.canon-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgb(15 10 5 / 72%);
+  backdrop-filter: blur(3px);
+}
+
+.canon-overlay.show {
+  display: flex;
+}
+
+.canon-modal,
+.canon-panel {
+  color: var(--canon-ink);
+  background: linear-gradient(170deg, var(--canon-parchment), var(--canon-parchment-2));
+  border: 1px solid #b8a87f;
+  box-shadow:
+    0 20px 60px rgb(0 0 0 / 60%),
+    inset 0 0 0 5px rgb(255 255 255 / 40%),
+    inset 0 0 0 6px rgb(160 135 80 / 40%);
+  animation: canon-modal-in 250ms ease;
+}
+
+.canon-modal {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  padding: 24px 24px 20px;
+  border-radius: 14px;
+}
+
+.canon-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  padding: 4px;
+  color: #9b8a64;
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.canon-modal-abbr {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.canon-modal-name {
+  margin-top: 2px;
+  color: var(--canon-ink-soft);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.canon-modal-cat {
+  display: inline-block;
+  padding: 3px 12px;
+  margin-top: 10px;
+  color: #fff;
+  font-size: 0.74rem;
+  letter-spacing: 0.15em;
+  border-radius: 99px;
+}
+
+.canon-modal-cat.ot {
+  background: var(--canon-ot);
+}
+
+.canon-modal-cat.nt {
+  background: var(--canon-nt);
+}
+
+.canon-modal-cat.locked {
+  background: #9b8a64;
+}
+
+.canon-modal-theme {
+  padding-top: 12px;
+  margin-top: 14px;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  border-top: 1px dashed #b8a87f;
+}
+
+.canon-modal-theme b {
+  font-family: "Noto Serif TC", serif;
+}
+
+.canon-modal-src {
+  margin-top: 12px;
+  color: #a08c62;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+}
+
+.canon-panel {
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  padding: 30px 28px;
+  overflow-y: auto;
+  text-align: center;
+  border-radius: 16px;
+  animation-duration: 300ms;
+}
+
+.canon-panel h2 {
+  margin: 0 0 4px;
+  color: #6e2c22;
+  font-family: "Noto Serif TC", PMingLiU, serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.3em;
+}
+
+.canon-panel-sub {
+  margin-bottom: 18px;
+  color: var(--canon-ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+.canon-panel-note {
+  margin-top: 16px;
+  margin-bottom: 0;
+  font-size: 0.7rem;
+}
+
+.canon-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.canon-mode-card {
+  padding: 18px 14px;
+  color: var(--canon-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: rgb(255 255 255 / 40%);
+  border: 1.5px solid #b8a87f;
+  border-radius: 12px;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.canon-mode-card:hover {
+  border-color: var(--canon-gold);
+  box-shadow: 0 8px 18px rgb(0 0 0 / 18%);
+  transform: translateY(-3px);
+}
+
+.canon-mode-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.canon-mode-badge {
+  padding: 2px 8px;
+  color: #fff;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  border-radius: 99px;
+}
+
+.canon-mode-badge.nt {
+  background: var(--canon-nt);
+}
+
+.canon-mode-badge.ot {
+  background: var(--canon-ot);
+}
+
+.canon-mode-desc {
+  margin-top: 8px;
+  color: var(--canon-ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.7;
+}
+
+.canon-win-stats {
+  display: flex;
+  gap: 26px;
+  justify-content: center;
+  margin: 14px 0 18px;
+}
+
+.canon-win-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.canon-win-stat b {
+  color: #6e2c22;
+  font-family: "Noto Serif TC", serif;
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.canon-win-stat span {
+  color: var(--canon-ink-soft);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+}
+
+.canon-bookwall {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 18px;
+}
+
+.canon-shelf-row {
+  padding: 8px 10px 0;
+  background: linear-gradient(180deg, #4a3826, #33261a);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 45%);
+}
+
+.canon-shelf-label {
+  margin-bottom: 4px;
+  color: #d8c79b;
+  font-size: 0.66rem;
+  text-align: left;
+  letter-spacing: 0.3em;
+}
+
+.canon-shelf-books {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5px;
+  align-items: flex-end;
+  padding-bottom: 0;
+}
+
+.canon-wall-spine {
+  position: relative;
+  width: 10px;
+  border: 1px solid rgb(0 0 0 / 45%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 1px 0 0 rgb(255 255 255 / 20%);
+}
+
+.canon-shelf-board {
+  height: 7px;
+  margin: 0 -10px;
+  background: linear-gradient(180deg, #5d4831, #2a1e12);
+  border-radius: 0 0 6px 6px;
+}
+
+.canon-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.canon-toast {
+  position: fixed;
+  bottom: 170px;
+  left: 50%;
+  z-index: 900;
+  padding: 8px 18px;
+  color: var(--canon-parchment);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  background: rgb(30 20 10 / 92%);
+  border: 1px solid rgb(201 162 39 / 50%);
+  border-radius: 99px;
+  opacity: 0;
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.canon-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.canon-sparkle {
+  position: fixed;
+  z-index: 950;
+  color: var(--canon-gold-soft);
+  font-size: 18px;
+  pointer-events: none;
+  animation: canon-sparkle-fly 1.1s ease-out forwards;
+}
+
+@keyframes canon-spine-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes canon-deal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) rotate(2deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes canon-hint-pulse {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+
+  50% {
+    border-color: var(--canon-gold);
+    box-shadow:
+      0 0 0 3px var(--canon-gold),
+      0 0 22px rgb(201 162 39 / 60%);
+  }
+}
+
+@keyframes canon-reject-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-3px);
+  }
+}
+
+@keyframes canon-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes canon-sparkle-fly {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(120deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .canon-shelves,
+  .canon-easy-mode .canon-shelves {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .canon-title-block h1 {
+    font-size: 1.1rem;
+  }
+
+  .canon-subtitle {
+    display: none;
+  }
+
+  .canon-piles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .canon-piles.single-pile {
+    grid-template-columns: 1fr;
+  }
+
+  .canon-pile {
+    min-height: 104px;
+  }
+
+  .canon-card {
+    width: 78px;
+    min-width: 78px;
+    height: 104px;
+  }
+
+  .canon-mode-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .canon-stats {
+    gap: 10px;
+    font-size: 0.7rem;
+  }
+
+  .canon-toast {
+    bottom: 160px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
