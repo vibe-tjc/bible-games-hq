@@ -80,6 +80,11 @@ const pageCopy = {
 const OPENFREEMAP_STYLE_URL = "https://tiles.openfreemap.org/styles/bright";
 const MINISTRY_ROUTE_SOURCE_ID = "ministry-route";
 const MINISTRY_ROUTE_LAYER_ID = "ministry-route-line";
+const NON_LOCALIZED_BASE_LABEL_LAYER_IDS = new Set([
+  "highway-shield-non-us",
+  "highway-shield-us-interstate",
+  "road_shield_us",
+]);
 
 const phaseLabels = {
   全部: { zh: "全部", en: "All" },
@@ -649,7 +654,11 @@ function localizeBaseMap(map: maplibregl.Map, language: MapLanguage) {
   const expression = getBaseMapLanguageExpression(language);
 
   map.getStyle().layers?.forEach((layer) => {
-    if (layer.type !== "symbol" || !("text-field" in (layer.layout ?? {}))) {
+    if (
+      layer.type !== "symbol" ||
+      !("text-field" in (layer.layout ?? {})) ||
+      NON_LOCALIZED_BASE_LABEL_LAYER_IDS.has(layer.id)
+    ) {
       return;
     }
 
@@ -664,13 +673,21 @@ function getBaseMapLanguageExpression(language: MapLanguage) {
       ["get", "name:zh-Hant"],
       ["get", "name:zh"],
       ["get", "name:zh-Hans"],
+      ["get", "name_zh"],
       ["get", "name:en"],
+      ["get", "name_en"],
       ["get", "name:latin"],
       ["get", "name"],
     ];
   }
 
-  return ["coalesce", ["get", "name:en"], ["get", "name:latin"], ["get", "name"]];
+  return [
+    "coalesce",
+    ["get", "name:en"],
+    ["get", "name_en"],
+    ["get", "name:latin"],
+    ["get", "name"],
+  ];
 }
 
 function fitStops(map: maplibregl.Map, stops: MinistryStop[], padding: number) {
