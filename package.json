@@ -19,6 +19,7 @@
     "@tanstack/react-router": "^1.139.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "leaflet": "~1.9.4",
     "lucide-react": "^0.556.0",
     "peerjs": "~1.5.5",
     "qrcode.react": "^4.2.0",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@tsdown/css": "~0.22.1",
+    "@types/leaflet": "~1.9.21",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
