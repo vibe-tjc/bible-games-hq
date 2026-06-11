@@ -1,6 +1,7 @@
 import { Link, Outlet, createRootRoute, createRoute, createRouter } from "@tanstack/react-router";
 import { Leaf } from "lucide-react";
 import { BeatitudesPage } from "./screens/BeatitudesPage";
+import { BibleCanonArchivePage } from "./screens/BibleCanonArchivePage";
 import { DesireListPage } from "./screens/DesireListPage";
 import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
@@ -76,12 +77,19 @@ const jesusMinistryMapRoute = createRoute({
   component: JesusMinistryMapPage,
 });
 
+const bibleCanonArchiveRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/games/bible-canon-archive",
+  component: BibleCanonArchivePage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   beatitudesRoute,
   hostRoomRoute,
   desireListRoute,
   jesusMinistryMapRoute,
+  bibleCanonArchiveRoute,
 ]);
 
 export const router = createRouter({
