@@ -1,14 +1,18 @@
 # Bible Games HQ
 
-有助於聖經分享可使用的小遊戲集合。
+有助於聖經分享可使用的小遊戲與資源集合。首頁以頁籤區分「聖經小遊戲」與「聖經資源」兩大主題。
 
-目前包含：
+## 聖經小遊戲
 
 - 登山寶訓中的八福連連看
 - 渴望清單：人生三階段
 - 耶穌傳道的腳蹤（互動地圖）
 - 經卷歸檔
 - 保羅宣道旅程（互動地圖，手繪／真實地圖雙模式）
+
+## 聖經資源
+
+- 聖經單位換算器（長度、重量、乾量、液量、工資理解的公制／英制換算，附現代生活直覺理解）
 
 ## 開發
 
@@ -17,7 +21,7 @@ pnpm install
 pnpm dev
 ```
 
-前端使用 Vite、React、TypeScript、TanStack Router、TanStack Query，並以淡綠色系呈現首頁與遊戲介面。
+前端使用 Vite、React、TypeScript、TanStack Router、TanStack Query，並以「晨光」視覺語言（冷調紙感背景、靜謐青綠 accent、襯線標題）呈現首頁與各遊戲／資源介面。
 
 ## 課堂模式後端：Apps Script + Google Sheet
 

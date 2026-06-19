@@ -2,6 +2,7 @@ import { Link, Outlet, createRootRoute, createRoute, createRouter } from "@tanst
 import { Leaf } from "lucide-react";
 import { BeatitudesPage } from "./screens/BeatitudesPage";
 import { BibleCanonArchivePage } from "./screens/BibleCanonArchivePage";
+import { BibleUnitConverterPage } from "./screens/BibleUnitConverterPage";
 import { DesireListPage } from "./screens/DesireListPage";
 import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
@@ -26,12 +27,14 @@ const rootRoute = createRootRoute({
   component: () => (
     <div className="app-shell">
       <header className="site-header">
-        <Link to="/" className="brand-link" aria-label="Bible Games HQ 首頁">
-          <span className="brand-mark">
-            <Leaf aria-hidden="true" size={20} />
-          </span>
-          <span>Bible Games HQ</span>
-        </Link>
+        <div className="site-header__inner">
+          <Link to="/" className="brand-link" aria-label="Bible Games HQ 首頁">
+            <span className="brand-mark">
+              <Leaf aria-hidden="true" size={20} />
+            </span>
+            <span>Bible Games HQ</span>
+          </Link>
+        </div>
       </header>
       <main>
         <Outlet />
@@ -90,6 +93,12 @@ const paulJourneysRoute = createRoute({
   component: PaulJourneysPage,
 });
 
+const bibleUnitConverterRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/resources/bible-unit-converter",
+  component: BibleUnitConverterPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   beatitudesRoute,
@@ -98,6 +107,7 @@ const routeTree = rootRoute.addChildren([
   jesusMinistryMapRoute,
   bibleCanonArchiveRoute,
   paulJourneysRoute,
+  bibleUnitConverterRoute,
 ]);
 
 export const router = createRouter({
