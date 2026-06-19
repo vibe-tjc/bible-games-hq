@@ -119,6 +119,7 @@ export function createMapRenderer(
     const c = CITIES[id];
     const el = document.createElement("div");
     const pin = document.createElement("div");
+    // challenge mode: SVG uses .hide; mapRenderer uses .nolabel — keep parity
     pin.className = "pin" + (deps.isChallenge() ? " nolabel" : "");
 
     const dot = document.createElement("span");
@@ -318,15 +319,7 @@ export function createMapRenderer(
     el.className = "paul-game-ring-marker";
     el.style.cssText =
       "width:30px;height:30px;border-radius:50%;border:3px solid #d4502f;background:transparent;animation:paul-ring-pulse 1s ease-out infinite;pointer-events:none;transform:translate(-50%,-50%)";
-
-    // Inject keyframes if not already present
-    if (!document.getElementById("paul-ring-keyframes")) {
-      const style = document.createElement("style");
-      style.id = "paul-ring-keyframes";
-      style.textContent =
-        "@keyframes paul-ring-pulse{0%{transform:translate(-50%,-50%) scale(.5);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.6);opacity:0}}";
-      document.head.appendChild(style);
-    }
+    // paul-ring-pulse @keyframes is defined in paul-journeys.css
 
     ringMarker = new maplibregl.Marker({ element: el, anchor: "center" })
       .setLngLat([c.lng, c.lat])

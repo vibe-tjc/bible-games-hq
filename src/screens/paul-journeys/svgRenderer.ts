@@ -114,6 +114,7 @@ export function createSvgRenderer(svgEl: SVGSVGElement, deps: RendererDeps): Ren
     else if (p.dir === "right") { tx = p.x + 13; }
     else if (p.dir === "top") { ty = p.y - 12; anc = "middle"; }
     else { ty = p.y + 19; anc = "middle"; }
+    // challenge mode: SVG uses .hide; mapRenderer uses .nolabel — keep parity
     const lab = ce("text", { x: tx, y: ty, "text-anchor": anc, class: "city-label" + (deps.isChallenge() ? " hide" : "") });
     lab.textContent = p.zh;
     const hit = ce("circle", { cx: p.x, cy: p.y, r: 18, fill: "transparent", class: "dot-hit" });

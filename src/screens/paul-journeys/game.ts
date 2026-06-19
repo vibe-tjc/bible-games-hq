@@ -447,9 +447,6 @@ export function createPaulGame(root: HTMLElement): PaulGame {
         R.show();
         R.after();
         if (J) rebuildScene();
-        else {
-          // fit to default view — mapRenderer handles its own init position
-        }
         updateMapBtn();
         if (J) setQuest();
       } else {
@@ -526,7 +523,12 @@ export function createPaulGame(root: HTMLElement): PaulGame {
   }
 
   /* ===== RESIZE HANDLER ===== */
+  function fitHeight(): void {
+    root.style.height = window.innerHeight - root.getBoundingClientRect().top + "px";
+  }
+
   function onResize(): void {
+    fitHeight();
     if (mapMode === "real" && mapRenderer) mapRenderer.after();
   }
 
@@ -580,12 +582,14 @@ export function createPaulGame(root: HTMLElement): PaulGame {
 
     if (startOv) startOv.classList.remove("hidden");
 
+    fitHeight();
     window.addEventListener("resize", onResize);
   }
 
   /* ===== DESTROY (public) ===== */
   function destroy(): void {
     window.removeEventListener("resize", onResize);
+    root.style.height = "";
 
     for (const id of timers) clearTimeout(id);
     timers.clear();

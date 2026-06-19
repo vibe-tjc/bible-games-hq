@@ -160,6 +160,12 @@
   50% { transform: translate(-54%, -50%); }
 }
 
+/* ── Ring hint marker (map mode) ── */
+@keyframes paul-ring-pulse {
+  0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
 /* ── Paul marker ── */
 .paul-game .paul {
   position: absolute;
