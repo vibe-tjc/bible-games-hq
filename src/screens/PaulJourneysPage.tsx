@@ -1,3 +1,4 @@
+import "./paul-journeys/paul-journeys.css";
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
