@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react";
 import { Archive, HeartHandshake, Map, Mountain } from "lucide-react";
 
+export type GameCategory = "game" | "resource";
+
 export type GameCard = {
   id: string;
   title: string;
@@ -8,6 +10,7 @@ export type GameCard = {
   href: string;
   icon: LucideIcon;
   status: "ready" | "planned";
+  category: GameCategory;
 };
 
 export const games: GameCard[] = [
@@ -18,6 +21,7 @@ export const games: GameCard[] = [
     href: "/games/beatitudes",
     icon: Mountain,
     status: "ready",
+    category: "game",
   },
   {
     id: "desire-list",
@@ -26,14 +30,7 @@ export const games: GameCard[] = [
     href: "/games/desire-list",
     icon: HeartHandshake,
     status: "ready",
-  },
-  {
-    id: "jesus-ministry-map",
-    title: "耶穌傳道的腳蹤",
-    description: "用互動地圖走過耶穌傳道的重要地點，查看路線、經文與每處發生的事蹟。",
-    href: "/games/jesus-ministry-map",
-    icon: Map,
-    status: "ready",
+    category: "game",
   },
   {
     id: "bible-canon-archive",
@@ -42,5 +39,15 @@ export const games: GameCard[] = [
     href: "/games/bible-canon-archive",
     icon: Archive,
     status: "ready",
+    category: "game",
+  },
+  {
+    id: "jesus-ministry-map",
+    title: "耶穌傳道的腳蹤",
+    description: "用互動地圖走過耶穌傳道的重要地點，查看路線、經文與每處發生的事蹟。",
+    href: "/games/jesus-ministry-map",
+    icon: Map,
+    status: "ready",
+    category: "resource",
   },
 ];

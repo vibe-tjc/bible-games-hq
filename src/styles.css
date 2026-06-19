@@ -1115,8 +1115,28 @@ p {
   line-height: 1;
 }
 
+.home-section {
+  margin-top: 40px;
+}
+
 .section-heading {
-  margin: 34px 0 16px;
+  margin: 0 0 16px;
+}
+
+.section-heading h2 {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.section-heading h2 svg {
+  color: var(--primary-strong);
+}
+
+.section-heading p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .game-grid {
