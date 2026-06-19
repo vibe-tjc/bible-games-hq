@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npm run build:spa-fallback",
+    "build": "tsc -b && vite build && pnpm run build:spa-fallback",
     "build:spa-fallback": "node scripts/copy-spa-fallback.mjs",
     "check": "tsc -b",
     "lint": "oxlint .",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@tsdown/css": "~0.22.1",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

@@ -13,8 +13,8 @@
 ## 開發
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 前端使用 Vite、React、TypeScript、TanStack Router、TanStack Query，並以淡綠色系呈現首頁與遊戲介面。
@@ -82,11 +82,11 @@ GitHub 需要設定：
 ## 驗證
 
 ```bash
-npm run check
-npm run lint
-npm run format:check
-npm run build
-npm run bundle:check
+pnpm check
+pnpm lint
+pnpm format:check
+pnpm build
+pnpm bundle:check
 ```
 
 Apps Script 可用臨時 `.cjs` 副本做基本語法檢查：

@@ -1,5 +1,6 @@
 // maplibre-gl CSS is already imported in src/main.tsx — no duplicate import needed.
 import maplibregl from "maplibre-gl";
+import type { Feature, LineString } from "geojson";
 import { CITIES } from "../../data/paulJourneys";
 import type { CityId } from "../../data/paulJourneys";
 import type { Renderer, RendererDeps, ScreenPoint } from "./types";
@@ -238,7 +239,7 @@ export function createMapRenderer(
       [b.lng, b.lat],
     ];
 
-    const geojson: GeoJSON.Feature<GeoJSON.LineString> = {
+    const geojson: Feature<LineString> = {
       type: "Feature",
       properties: {},
       geometry: { type: "LineString", coordinates: coords },
