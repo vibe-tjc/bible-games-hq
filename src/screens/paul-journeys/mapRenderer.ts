@@ -27,6 +27,7 @@ export function createMapRenderer(
 
   // rAF / timeout cancellation
   let pendingRaf: number | null = null;
+  const routeRafIds: number[] = [];
   let pendingShakeTimers: ReturnType<typeof setTimeout>[] = [];
 
   // ---- init ----
@@ -52,8 +53,15 @@ export function createMapRenderer(
     };
   }
 
-  map.on("load", () => callbacks.onReady());
-  map.on("error", () => callbacks.onError());
+  function onInitError() {
+    map.off("error", onInitError);
+    callbacks.onError();
+  }
+  map.once("error", onInitError);
+  map.on("load", () => {
+    map.off("error", onInitError);
+    callbacks.onReady();
+  });
 
   // ---- helpers ----
   function getPinEl(id: CityId): HTMLElement | null {
@@ -290,16 +298,15 @@ export function createMapRenderer(
         const k = Math.min(1, (now - t0) / dur);
         map.setPaintProperty(mainLayerId, "line-opacity", k * 0.97);
         if (k < 1) {
-          pendingRaf = requestAnimationFrame(fadeIn);
+          routeRafIds.push(requestAnimationFrame(fadeIn));
         } else {
-          pendingRaf = null;
           // Apply sea dasharray after animation completes
           if (sea) {
             map.setPaintProperty(mainLayerId, "line-dasharray", [2, 10]);
           }
         }
       }
-      pendingRaf = requestAnimationFrame(fadeIn);
+      routeRafIds.push(requestAnimationFrame(fadeIn));
     }
   }
 
@@ -344,6 +351,8 @@ export function createMapRenderer(
       cancelAnimationFrame(pendingRaf);
       pendingRaf = null;
     }
+    for (const id of routeRafIds) cancelAnimationFrame(id);
+    routeRafIds.length = 0;
     for (const t of pendingShakeTimers) clearTimeout(t);
     pendingShakeTimers.length = 0;
     map.remove();
