@@ -36,6 +36,11 @@ export function createPaulGame(root: HTMLElement): PaulGame {
     return id;
   }
 
+  function clearTracked(id: number): void {
+    timers.delete(id);
+    clearTimeout(id);
+  }
+
   /* ===== STATE ===== */
   let J: Journey | null = null;
   let cur = 0;
@@ -128,7 +133,7 @@ export function createPaulGame(root: HTMLElement): PaulGame {
           : "旅程完成!";
     }
     if (isHint && !sticky) {
-      clearTimeout(questHintTimer);
+      clearTracked(questHintTimer);
       questHintTimer = ST(() => {
         q.classList.remove("hint");
         setQuest();
@@ -173,7 +178,7 @@ export function createPaulGame(root: HTMLElement): PaulGame {
     if (!c) return;
     c.textContent = t + " 🔥";
     c.classList.add("show");
-    clearTimeout(comboT);
+    clearTracked(comboT);
     comboT = ST(() => c.classList.remove("show"), 1100);
   }
 
