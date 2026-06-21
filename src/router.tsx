@@ -3,6 +3,7 @@ import { Leaf } from "lucide-react";
 import { BeatitudesPage } from "./screens/BeatitudesPage";
 import { BibleCanonArchivePage } from "./screens/BibleCanonArchivePage";
 import { BibleUnitConverterPage } from "./screens/BibleUnitConverterPage";
+import { BibleWarsPage } from "./screens/BibleWarsPage";
 import { DesireListPage } from "./screens/DesireListPage";
 import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
@@ -99,6 +100,12 @@ const bibleUnitConverterRoute = createRoute({
   component: BibleUnitConverterPage,
 });
 
+const bibleWarsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/resources/bible-wars",
+  component: BibleWarsPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   beatitudesRoute,
@@ -108,6 +115,7 @@ const routeTree = rootRoute.addChildren([
   bibleCanonArchiveRoute,
   paulJourneysRoute,
   bibleUnitConverterRoute,
+  bibleWarsRoute,
 ]);
 
 export const router = createRouter({
