@@ -2949,6 +2949,192 @@ p {
   line-height: 1.45;
 }
 
+/* Bible wars resource */
+.war-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.war-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: min(260px, 60vw);
+  padding: 0 13px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.war-search input {
+  width: 100%;
+  min-height: 38px;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  font: inherit;
+}
+
+.war-search input:focus {
+  outline: none;
+}
+
+.war-search:focus-within {
+  border-color: var(--primary);
+}
+
+.war-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  color: var(--primary-strong);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.war-reset:hover {
+  border-color: var(--primary);
+}
+
+.map-detail-card .map-detail-kicker span {
+  width: 40px;
+  height: 40px;
+}
+
+.war-people {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  color: var(--ink);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.war-people svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--primary);
+}
+
+.war-people b {
+  display: block;
+  color: var(--primary-strong);
+  font-size: 0.84rem;
+}
+
+.war-people span {
+  line-height: 1.6;
+}
+
+.war-flow h3,
+.war-lessons h3 {
+  margin-bottom: 12px;
+}
+
+.war-steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.war-step {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 4px 10px;
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.war-num {
+  display: inline-grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: #fff;
+  background: var(--primary);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.war-step b {
+  color: var(--ink);
+}
+
+.war-step p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.war-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.war-chip {
+  padding: 7px 12px;
+  color: var(--primary-strong);
+  background: var(--primary-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.war-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.war-empty {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.map-stage-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.war-fit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 13px;
+  color: var(--primary-strong);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.war-fit:hover {
+  border-color: var(--primary);
+}
+
 @keyframes correct-pop {
   0% {
     transform: scale(1);
