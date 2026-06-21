@@ -17,7 +17,7 @@ export type BibleUnit = {
   metric: Measure;
   imperial: Measure;
   note: string;
-  modernKind?: "silver";
+  modernKind?: "metal";
 };
 
 export const categories: Record<CategoryId, string> = {
@@ -95,7 +95,7 @@ export const units: BibleUnit[] = [
   {
     id: "gerah",
     category: "weight",
-    modernKind: "silver",
+    modernKind: "metal",
     zh: "季拉",
     en: "gerah",
     metric: { value: 0.57, unit: "公克 g" },
@@ -105,7 +105,7 @@ export const units: BibleUnit[] = [
   {
     id: "beka",
     category: "weight",
-    modernKind: "silver",
+    modernKind: "metal",
     zh: "比加",
     en: "beka",
     metric: { value: 5.7, unit: "公克 g" },
@@ -115,7 +115,7 @@ export const units: BibleUnit[] = [
   {
     id: "shekel",
     category: "weight",
-    modernKind: "silver",
+    modernKind: "metal",
     zh: "舍客勒",
     en: "shekel",
     metric: { value: 11.5, unit: "公克 g" },
@@ -125,7 +125,7 @@ export const units: BibleUnit[] = [
   {
     id: "mina",
     category: "weight",
-    modernKind: "silver",
+    modernKind: "metal",
     zh: "彌拿",
     en: "mina",
     metric: { value: 571, unit: "公克 g", displayDivisor: 1000, displayUnit: "公斤 kg" },
@@ -135,7 +135,7 @@ export const units: BibleUnit[] = [
   {
     id: "talent",
     category: "weight",
-    modernKind: "silver",
+    modernKind: "metal",
     zh: "他連得",
     en: "talent",
     metric: { value: 34, unit: "公斤 kg" },
@@ -306,21 +306,23 @@ export type Insight = {
 
 export type InsightSettings = {
   silverPrice: number;
+  goldPrice: number;
   dayWageUsd: number;
 };
 
 export function modernInsight(
   unit: BibleUnit,
   amount: number,
-  { silverPrice, dayWageUsd }: InsightSettings,
+  { silverPrice, goldPrice, dayWageUsd }: InsightSettings,
 ): Insight {
-  if (unit.modernKind === "silver") {
+  if (unit.modernKind === "metal") {
     const grams = metricGrams(unit, amount) ?? 0;
     const troyOz = grams / TROY_OUNCE_GRAMS;
-    const usd = troyOz * silverPrice;
+    const silverUsd = troyOz * silverPrice;
+    const goldUsd = troyOz * goldPrice;
     return {
-      value: `若視為銀子，約 ${fmtUsd(usd)}`,
-      note: `以 ${fmt(amount)} ${unit.zh} ≈ ${fmt(grams / 1000)} 公斤銀，銀價 ${fmtUsd(silverPrice)} / 金衡盎司估算。`,
+      value: `若視為銀子約 ${fmtUsd(silverUsd)}；若視為金子約 ${fmtUsd(goldUsd)}`,
+      note: `以 ${fmt(amount)} ${unit.zh} ≈ ${fmt(grams / 1000)} 公斤計，銀價 ${fmtUsd(silverPrice)}、金價 ${fmtUsd(goldPrice)} / 金衡盎司估算。`,
     };
   }
   if (unit.category === "wage") {
