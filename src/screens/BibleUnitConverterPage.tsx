@@ -21,6 +21,7 @@ export function BibleUnitConverterPage() {
   const [unitId, setUnitId] = useState("cubit");
   const [system, setSystem] = useState<UnitSystem>("metric");
   const [silverPrice, setSilverPrice] = useState("70");
+  const [goldPrice, setGoldPrice] = useState("2400");
   const [dayWageUsd, setDayWageUsd] = useState("100");
   const [tableOpen, setTableOpen] = useState(false);
 
@@ -37,6 +38,7 @@ export function BibleUnitConverterPage() {
   const other = displayValue(unit, otherSystem, amountNum);
   const insight = modernInsight(unit, amountNum, {
     silverPrice: Number(silverPrice || 0),
+    goldPrice: Number(goldPrice || 0),
     dayWageUsd: Number(dayWageUsd || 0),
   });
 
@@ -164,6 +166,18 @@ export function BibleUnitConverterPage() {
                   min="0"
                   value={silverPrice}
                   onChange={(event) => setSilverPrice(event.target.value)}
+                />
+              </div>
+              <div className="uc-field">
+                <label htmlFor="uc-gold">金價 USD / 金衡盎司</label>
+                <input
+                  id="uc-gold"
+                  className="input"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={goldPrice}
+                  onChange={(event) => setGoldPrice(event.target.value)}
                 />
               </div>
               <div className="uc-field">
