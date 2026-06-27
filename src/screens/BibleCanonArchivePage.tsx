@@ -115,6 +115,7 @@ export function BibleCanonArchivePage() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedMs, setElapsedMs] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [usedQuickArchive, setUsedQuickArchive] = useState(false);
   const [selectedAbbr, setSelectedAbbr] = useState<string | null>(null);
   const [modalBook, setModalBook] = useState<CanonBook | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -205,6 +206,7 @@ export function BibleCanonArchivePage() {
     setElapsedMs(0);
     setStartTime(nextStart);
     setFinished(false);
+    setUsedQuickArchive(false);
     setSelectedAbbr(null);
     setModalBook(null);
     setShowStart(false);
@@ -306,6 +308,69 @@ export function BibleCanonArchivePage() {
     showToast(`提示：《${book.name}》的家在閃光的書架`);
   };
 
+  const archiveHand = () => {
+    if (finished || hand.length === 0) {
+      return;
+    }
+
+    const archivedCount = hand.length;
+
+    setPlaced((current) => {
+      const next = { ...current };
+      for (const book of hand) {
+        const key = categoryOf(book, mode);
+        next[key] = [...(next[key] ?? []), book];
+      }
+      return next;
+    });
+    setRevealed((current) => {
+      const next = new Set(current);
+      hand.forEach((book) => next.add(book.abbr));
+      return next;
+    });
+
+    const nextHand = deck.slice(0, HAND_SIZE);
+    setHand(nextHand);
+    setDeck(deck.slice(HAND_SIZE));
+    setSelectedAbbr(null);
+    setUsedQuickArchive(true);
+
+    const pile = document.querySelector<HTMLElement>("[data-canon-pile-key]");
+    addSparkles(pile);
+    showToast(`已快速歸檔 ${archivedCount} 卷`);
+
+    if (totalDone + archivedCount === BOOK_TOTAL) {
+      setFinished(true);
+      setElapsedMs(startTime ? Date.now() - startTime : elapsedMs);
+      window.setTimeout(() => setShowWin(true), 600);
+    }
+  };
+
+  const archiveAll = () => {
+    if (finished) {
+      return;
+    }
+
+    const remaining = [...hand, ...deck];
+
+    setPlaced((current) => {
+      const next = { ...current };
+      for (const book of remaining) {
+        const key = categoryOf(book, mode);
+        next[key] = [...(next[key] ?? []), book];
+      }
+      return next;
+    });
+    setRevealed(new Set(canonBooks.map((book) => book.abbr)));
+    setHand([]);
+    setDeck([]);
+    setSelectedAbbr(null);
+    setUsedQuickArchive(true);
+    setFinished(true);
+    setElapsedMs(startTime ? Date.now() - startTime : elapsedMs);
+    window.setTimeout(() => setShowWin(true), 600);
+  };
+
   const handleRestart = () => {
     setFinished(true);
     setShowStart(true);
@@ -395,6 +460,12 @@ export function BibleCanonArchivePage() {
         </div>
         <button className="canon-btn" onClick={handleHint}>
           💡 提示
+        </button>
+        <button className="canon-btn" onClick={archiveHand}>
+          ⏩ 歸檔手牌
+        </button>
+        <button className="canon-btn" onClick={archiveAll}>
+          ⏭ 全部歸檔
         </button>
         <button className="canon-btn" onClick={handleRestart}>
           ↺ 重新開始
@@ -607,6 +678,9 @@ export function BibleCanonArchivePage() {
                 <span>提示</span>
               </div>
             </div>
+            {usedQuickArchive ? (
+              <div className="canon-panel-sub canon-panel-note">（含快速歸檔）</div>
+            ) : null}
             <div className="canon-bookwall">
               {(["ot", "nt"] as TestamentKey[]).map((testament) => {
                 const books = canonBooks.filter((book) => book.testament === testament);
