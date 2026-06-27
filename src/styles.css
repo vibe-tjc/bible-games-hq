@@ -624,6 +624,19 @@
   font-family: "Noto Serif TC", serif;
 }
 
+.canon-modal-clue {
+  padding-top: 12px;
+  margin-top: 14px;
+  font-size: 0.9rem;
+  line-height: 1.85;
+  color: rgb(74 60 40 / 90%);
+  border-top: 1px dashed #b8a87f;
+}
+
+.canon-modal-clue b {
+  font-family: "Noto Serif TC", serif;
+}
+
 .canon-modal-src {
   margin-top: 12px;
   color: #a08c62;

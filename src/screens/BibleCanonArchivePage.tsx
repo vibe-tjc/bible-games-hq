@@ -539,6 +539,12 @@ export function BibleCanonArchivePage() {
               <b>主題：</b>
               {modalBook.theme}
             </div>
+            {modalBook.clue ? (
+              <div className="canon-modal-clue">
+                <b>📍 背景小提示：</b>
+                {modalBook.clue}
+              </div>
+            ) : null}
             <div className="canon-modal-src">
               主題摘要參考：真耶穌教會（喜信網路家庭 joy.org.tw）聖經導讀方向整理
             </div>
