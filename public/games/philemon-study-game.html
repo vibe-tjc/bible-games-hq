@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腓利門書・讀經四步</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EBE0C7;
+  --paper-deep:#E1D3B2;
+  --paper-card:#F3EBD8;
+  --ink:#222A3A;
+  --ink-soft:#4E5566;
+  --ink-faint:#7C8092;
+  --seal:#8A2B2B;
+  --seal-deep:#6C1F1F;
+  --seal-tint:rgba(138,43,43,0.10);
+  --gold:#A8842F;
+  --gold-soft:#C7A65A;
+  --olive:#54632F;
+  --olive-tint:rgba(84,99,47,0.12);
+  --line:rgba(34,42,58,0.16);
+  --serif:'Noto Serif TC','Songti TC','SimSun',serif;
+  --sans:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 18% 12%,rgba(168,132,47,0.10),transparent 42%),
+    radial-gradient(circle at 86% 88%,rgba(138,43,43,0.08),transparent 45%),
+    var(--paper);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+.wrap{max-width:680px;margin:0 auto;padding:18px 18px 60px}
+
+/* ---------- progress seals ---------- */
+.topbar{position:sticky;top:0;z-index:30;background:linear-gradient(var(--paper) 72%,rgba(235,224,199,0));padding:12px 0 16px;margin-bottom:6px}
+.steps{display:flex;align-items:center;justify-content:center;gap:0}
+.step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto}
+.seal{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  border:2px solid var(--ink-faint);color:var(--ink-faint);
+  font-family:var(--serif);font-weight:700;font-size:19px;background:transparent;
+  transition:transform .25s ease}
+.step small{font-size:11px;color:var(--ink-faint);letter-spacing:.06em;font-weight:500}
+.step.cur .seal{border-color:var(--seal);color:var(--seal);box-shadow:0 0 0 4px var(--seal-tint)}
+.step.cur small{color:var(--seal)}
+.step.done .seal{background:radial-gradient(circle at 35% 30%,#a23636,var(--seal) 70%);
+  border-color:var(--seal-deep);color:#f4e9d6;
+  box-shadow:0 2px 6px rgba(108,31,31,.35), inset 0 1px 2px rgba(255,255,255,.25)}
+.step.done small{color:var(--seal)}
+.connector{width:18px;height:2px;background:var(--line);margin:0 2px;align-self:flex-start;margin-top:20px;flex:0 1 28px}
+.connector.lit{background:var(--seal)}
+
+/* ---------- screens ---------- */
+.screen{display:none;animation:rise .45s ease both}
+.screen.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.eyebrow{font-size:12px;letter-spacing:.34em;color:var(--seal);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+h1{font-family:var(--serif);font-weight:900;font-size:clamp(30px,8vw,46px);line-height:1.18;letter-spacing:.02em}
+h2{font-family:var(--serif);font-weight:700;font-size:clamp(22px,5.4vw,30px);line-height:1.3;margin-bottom:4px}
+.lede{color:var(--ink-soft);font-size:16px;margin-top:14px}
+.kicker{font-family:var(--serif);color:var(--gold);font-weight:600;font-size:15px;letter-spacing:.05em}
+
+/* ---------- intro / wax seal ---------- */
+.cover{text-align:center;padding-top:18px}
+.waxwrap{margin:34px auto 30px;width:160px;height:160px;position:relative;cursor:pointer;background:none;border:none;display:block}
+.waxwrap:focus-visible{outline:3px solid var(--gold);outline-offset:8px;border-radius:50%}
+.wax{width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#a83a3a,var(--seal) 55%,var(--seal-deep) 100%);
+  box-shadow:0 10px 26px rgba(108,31,31,.4), inset 0 3px 8px rgba(255,255,255,.22), inset 0 -6px 14px rgba(0,0,0,.28);
+  display:grid;place-items:center;position:relative;
+  clip-path:polygon(50% 0,61% 6%,72% 3%,79% 13%,91% 14%,93% 26%,100% 35%,96% 47%,100% 60%,91% 68%,90% 81%,78% 84%,71% 95%,59% 92%,50% 100%,41% 92%,29% 95%,22% 84%,10% 81%,9% 68%,0 60%,4% 47%,0 35%,7% 26%,9% 14%,21% 13%,28% 3%,39% 6%);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.wax .mark{font-family:var(--serif);color:#f0dcc4;font-size:58px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.35);line-height:1}
+.waxwrap:hover .wax{transform:scale(1.04) rotate(-2deg)}
+.waxwrap.broken .wax{transform:scale(1.3);opacity:0}
+.tap-hint{font-size:13px;color:var(--ink-faint);letter-spacing:.12em;margin-top:6px}
+
+/* ---------- letter ---------- */
+.letter{background:var(--paper-card);border:1px solid var(--line);border-radius:4px;
+  padding:26px 22px;margin:20px 0;
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 10px 30px -16px rgba(34,42,58,.4);
+  position:relative}
+.letter::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--gold-soft),var(--seal))}
+.letter .vno{font-family:var(--serif);font-size:11px;color:var(--gold);font-weight:700;vertical-align:.35em;margin-right:3px;margin-left:2px}
+.letter p{font-family:var(--serif);font-size:17px;line-height:2.05;color:var(--ink);text-align:justify}
+.letter .salute{display:block;margin-bottom:2px}
+.dropcap{float:left;font-family:var(--serif);font-weight:900;font-size:56px;line-height:.86;color:var(--seal);margin:6px 12px 0 0}
+
+/* ---------- cards & prompts ---------- */
+.panel{background:var(--paper-card);border:1px solid var(--line);border-radius:6px;padding:20px 18px;margin:16px 0;
+  box-shadow:0 8px 24px -18px rgba(34,42,58,.5)}
+.prompt{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.55;margin-bottom:4px}
+.sub{color:var(--ink-soft);font-size:14px;margin-bottom:14px}
+.counter{font-size:12px;color:var(--ink-faint);letter-spacing:.14em;font-weight:600;margin-bottom:10px}
+
+.factcard{background:linear-gradient(180deg,#fff8e9,var(--paper-card));border:1px solid var(--gold-soft);
+  border-radius:6px;padding:18px 16px;font-family:var(--serif);font-size:18px;line-height:1.6;margin-bottom:16px;
+  box-shadow:0 6px 16px -12px rgba(168,132,47,.6)}
+
+.opts{display:grid;gap:10px}
+.opts.grid6{grid-template-columns:repeat(3,1fr)}
+.opt{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--ink);
+  background:var(--paper-card);border:1.5px solid var(--line);border-radius:7px;padding:13px 14px;
+  cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .08s;line-height:1.5}
+.opts.grid6 .opt{text-align:center;padding:14px 6px;font-family:var(--serif);font-size:17px;font-weight:600}
+.opt:hover{border-color:var(--gold);background:#fffaef}
+.opt:active{transform:scale(.98)}
+.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--olive);background:var(--olive-tint);color:var(--olive);font-weight:700}
+.opt.wrong{border-color:var(--seal);background:var(--seal-tint);color:var(--seal)}
+.opt.muted{opacity:.5}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.duo .opt{text-align:center;font-family:var(--serif);font-size:17px;font-weight:600;padding:16px}
+
+/* feedback */
+.feedback{margin-top:16px;border-radius:7px;padding:14px 16px;font-size:14.5px;line-height:1.7;display:none;animation:rise .3s ease both}
+.feedback.show{display:block}
+.feedback.good{background:var(--olive-tint);border:1px solid rgba(84,99,47,.4);color:#3f4d22}
+.feedback.bad{background:var(--seal-tint);border:1px solid rgba(138,43,43,.4);color:var(--seal-deep)}
+.feedback b{font-family:var(--serif)}
+
+/* ordering */
+.pool{display:grid;gap:10px;margin-bottom:14px}
+.seq{min-height:8px;display:grid;gap:10px;margin-bottom:8px}
+.chip{background:var(--paper-card);border:1.5px solid var(--line);border-radius:7px;padding:12px 14px;
+  font-family:var(--serif);font-size:16px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.15s;text-align:left;width:100%;color:var(--ink)}
+.chip:hover{border-color:var(--gold)}
+.chip .num{flex:0 0 24px;height:24px;border-radius:50%;background:var(--seal);color:#f4e9d6;font-family:var(--sans);
+  font-size:13px;font-weight:700;display:grid;place-items:center}
+.chip.placed{border-color:var(--olive);background:var(--olive-tint)}
+.chip.bad{border-color:var(--seal);background:var(--seal-tint)}
+
+/* application reflection */
+.commit{display:grid;gap:10px}
+.note{font-family:var(--serif);font-size:14.5px;color:var(--olive);background:var(--olive-tint);
+  border-left:3px solid var(--olive);padding:12px 14px;border-radius:0 6px 6px 0;margin-top:14px;display:none;line-height:1.7}
+.note.show{display:block;animation:rise .3s ease both}
+.note .ref{color:var(--gold);font-weight:700;display:block;margin-top:6px;font-size:13px;letter-spacing:.04em}
+
+/* buttons */
+.btn{font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:.04em;color:#f4e9d6;
+  background:linear-gradient(180deg,#9a3636,var(--seal));border:none;border-radius:8px;padding:15px 26px;cursor:pointer;
+  box-shadow:0 8px 18px -8px rgba(108,31,31,.6);transition:transform .1s,filter .15s;width:100%;margin-top:10px}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{filter:grayscale(.5) brightness(.95);opacity:.55;cursor:not-allowed;box-shadow:none}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn.ghost{background:transparent;color:var(--seal);border:1.5px solid var(--seal);box-shadow:none}
+.btn.ghost:hover{background:var(--seal-tint)}
+.btn-row{display:flex;gap:12px}
+.btn-row .btn{margin-top:14px}
+
+.stage-tag{font-size:12px;letter-spacing:.3em;color:var(--gold);font-weight:700;margin-bottom:8px}
+.method{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.method span{font-size:12px;color:var(--ink-soft);background:rgba(168,132,47,.14);border:1px solid rgba(168,132,47,.3);
+  border-radius:20px;padding:4px 11px;font-weight:500}
+
+/* done */
+.scorecard{text-align:center;padding:8px 0 4px}
+.bigseal{width:108px;height:108px;margin:8px auto 18px;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#a83a3a,var(--seal) 60%,var(--seal-deep));
+  box-shadow:0 12px 30px -10px rgba(108,31,31,.55), inset 0 3px 8px rgba(255,255,255,.22), inset 0 -6px 14px rgba(0,0,0,.28);
+  display:grid;place-items:center;color:#f0dcc4;font-family:var(--serif);font-size:52px;font-weight:700}
+.versecard{font-family:var(--serif);font-size:20px;line-height:1.85;color:var(--ink);
+  background:var(--paper-card);border:1px solid var(--gold-soft);border-radius:6px;padding:22px 20px;margin:18px 0;position:relative}
+.versecard .src{display:block;margin-top:10px;font-size:13px;color:var(--gold);font-weight:700;letter-spacing:.06em}
+.recap{display:grid;gap:8px;margin:16px 0;text-align:left}
+.recap div{font-size:14px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start}
+.recap b{font-family:var(--serif);color:var(--seal);flex:0 0 auto}
+
+footer{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:34px;letter-spacing:.04em}
+
+@media (max-width:380px){.opts.grid6{grid-template-columns:repeat(2,1fr)}.seal{width:38px;height:38px;font-size:17px}.connector{flex-basis:18px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- progress -->
+  <div class="topbar" id="topbar" style="display:none">
+    <div class="steps" id="steps"></div>
+  </div>
+
+  <!-- ===== INTRO ===== -->
+  <section class="screen active cover" id="s-intro">
+    <p class="eyebrow">讀經四步・新約書信</p>
+    <h1>腓利門書</h1>
+    <p class="kicker" style="margin-top:10px">一封從監獄寄出的私人信</p>
+    <button class="waxwrap" id="waxbtn" aria-label="拆開封印，開始讀經">
+      <div class="wax"><span class="mark">腓</span></div>
+    </button>
+    <p class="tap-hint">輕觸火漆，拆開這封信</p>
+    <p class="lede" style="max-width:480px;margin-left:auto;margin-right:auto">
+      保羅被囚時，寫信請朋友腓利門接納一個逃跑、如今信了主的奴僕。<br>
+      我們用「觀察 → 結構 → 解釋 → 應用」四個步驟，把這封信讀懂、讀進心裡。
+    </p>
+    <div class="method" style="justify-content:center;margin-top:18px">
+      <span>① 觀察</span><span>② 結構分析</span><span>③ 解釋</span><span>④ 應用</span>
+    </div>
+  </section>
+
+  <!-- ===== READ ===== -->
+  <section class="screen" id="s-read">
+    <p class="stage-tag">先讀一遍全文</p>
+    <h2>腓利門書（和合本）</h2>
+    <p class="sub">慢慢讀。留意：誰寫的、寫給誰、為了一件什麼事。讀完再進入第一關。</p>
+    <div class="letter" id="lettertext"></div>
+    <button class="btn" onclick="go('s1')">讀完了，開始第一關 ①觀察</button>
+  </section>
+
+  <!-- ===== STAGE 1 OBSERVATION ===== -->
+  <section class="screen" id="s-s1">
+    <p class="stage-tag">第一關</p>
+    <h2>① 觀察</h2>
+    <p class="sub">不急著解釋，先看清楚經文「說了什麼」。把下面的觀察，歸入正確的問題。</p>
+    <div class="panel">
+      <p class="counter" id="c1">第 1 / 6 題</p>
+      <div class="factcard" id="fact1"></div>
+      <div class="opts grid6" id="opts1"></div>
+      <div class="feedback" id="fb1"></div>
+      <button class="btn" id="next1" style="display:none" onclick="s1next()">下一題</button>
+    </div>
+  </section>
+
+  <!-- ===== STAGE 2 STRUCTURE ===== -->
+  <section class="screen" id="s-s2">
+    <p class="stage-tag">第二關</p>
+    <h2>② 結構分析</h2>
+    <p class="sub">找出主題、看清分段、注意上下文——讓整封信的骨架浮現出來。</p>
+
+    <div class="panel" id="s2a">
+      <p class="counter">A・找主題</p>
+      <p class="prompt">這封信整體最核心的主題是？</p>
+      <div class="opts" id="opts2a" style="margin-top:12px"></div>
+      <div class="feedback" id="fb2a"></div>
+    </div>
+
+    <div class="panel" id="s2b" style="display:none">
+      <p class="counter">B・分段</p>
+      <p class="prompt">把這封信的四個段落，按出現順序排好。</p>
+      <p class="sub" style="margin-top:6px">依序點選下方段落；點上方可退回重排。</p>
+      <div class="seq" id="seq2b"></div>
+      <div class="pool" id="pool2b"></div>
+      <div class="feedback" id="fb2b"></div>
+      <button class="btn ghost" id="reset2b" style="display:none" onclick="s2bReset()">重新排列</button>
+    </div>
+
+    <div class="panel" id="s2c" style="display:none">
+      <p class="counter">C・看上下文</p>
+      <p class="prompt">第 16 節說阿尼西母「不再是奴僕，乃是親愛的兄弟」。要讀懂這句，最需要先知道什麼背景？</p>
+      <div class="opts" id="opts2c" style="margin-top:12px"></div>
+      <div class="feedback" id="fb2c"></div>
+    </div>
+
+    <button class="btn" id="next2" style="display:none" onclick="go('s3')">完成第二關，前往 ③解釋</button>
+  </section>
+
+  <!-- ===== STAGE 3 INTERPRETATION ===== -->
+  <section class="screen" id="s-s3">
+    <p class="stage-tag">第三關</p>
+    <h2>③ 解釋</h2>
+    <p class="sub">尊重文體、抓住作者原意、避免斷章取義。判斷下面的讀法是否「合宜」。</p>
+    <div class="panel">
+      <p class="counter" id="c3">第 1 / 5 則</p>
+      <div class="factcard" id="fact3"></div>
+      <div class="duo">
+        <button class="opt" id="g3" onclick="s3answer(true)">合宜</button>
+        <button class="opt" id="b3" onclick="s3answer(false)">不合宜</button>
+      </div>
+      <div class="feedback" id="fb3"></div>
+      <button class="btn" id="next3" style="display:none" onclick="s3next()">下一則</button>
+    </div>
+  </section>
+
+  <!-- ===== STAGE 4 APPLICATION ===== -->
+  <section class="screen" id="s-s4">
+    <p class="stage-tag">第四關</p>
+    <h2>④ 應用</h2>
+    <p class="sub">讀經的目的是回到生活。先分辨經文給了什麼，再想想今天怎麼行。</p>
+
+    <div class="panel" id="s4a">
+      <p class="counter" id="c4a">A・分辨　第 1 / 5 題</p>
+      <p class="sub" style="margin-top:0">這一項屬於 命令、應許，還是榜樣？</p>
+      <div class="factcard" id="fact4"></div>
+      <div class="opts grid6" id="opts4a"></div>
+      <div class="feedback" id="fb4a"></div>
+      <button class="btn" id="next4a" style="display:none" onclick="s4anext()">下一題</button>
+    </div>
+
+    <div class="panel" id="s4b" style="display:none">
+      <p class="counter">B・今天如何實踐</p>
+      <p class="prompt">這一週，你想從哪一件開始？</p>
+      <p class="sub" style="margin-top:6px">沒有標準答案——選一個放在心上的回應。</p>
+      <div class="commit" id="commit4b"></div>
+      <div class="note" id="note4b"></div>
+      <button class="btn" id="next4b" style="display:none" onclick="go('done')">完成讀經，看總結</button>
+    </div>
+  </section>
+
+  <!-- ===== DONE ===== -->
+  <section class="screen" id="s-done">
+    <div class="scorecard">
+      <p class="eyebrow" style="text-align:center">四枚印・已蓋齊</p>
+      <div class="bigseal">腓</div>
+      <h2 style="text-align:center">你把這封信讀完了</h2>
+      <p class="sub" id="scoreline" style="text-align:center;margin-top:8px"></p>
+    </div>
+
+    <div class="versecard">
+      「他暫時離開你，或者是叫你永遠得著他，<br>不再是奴僕，乃是高過奴僕，是親愛的兄弟。」
+      <span class="src">腓利門書 1:15–16</span>
+    </div>
+
+    <div class="recap">
+      <div><b>① 觀察</b><span>看清誰、在哪、為何事——逃跑的奴僕信了主，保羅請腓利門接納他。</span></div>
+      <div><b>② 結構</b><span>主題是接納與饒恕；信分四段，核心在 8–21 節的代求。</span></div>
+      <div><b>③ 解釋</b><span>這是一封「憑愛心勸」的私信，不可斷章取義成發財或律法條文。</span></div>
+      <div><b>④ 應用</b><span>像保羅一樣為人代求、甘心承擔；像腓利門一樣，把得罪過你的人重新當作弟兄。</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="location.reload()">再玩一次</button>
+      <button class="btn" onclick="go('read')">重讀經文</button>
+    </div>
+    <footer>讀經四步・腓利門書　|　經文：和合本（公有領域）</footer>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+var VERSES = [
+ [1,"為基督耶穌被囚的保羅，同兄弟提摩太寫信給我們所親愛的同工腓利門，"],
+ [2,"和妹子亞腓亞並與我們同當兵的亞基布，以及在你家的教會。"],
+ [3,"願恩惠、平安從神我們的父和主耶穌基督歸與你們！"],
+ [4,"我禱告的時候提到你，常為你感謝我的神；"],
+ [5,"因聽說你的愛心並你向主耶穌和眾聖徒的信心。"],
+ [6,"願你與人所同有的信心顯出功效，使人知道你們各樣善事都是為基督做的。"],
+ [7,"兄弟啊，我為你的愛心，大有快樂，大得安慰，因眾聖徒的心從你得了暢快。"],
+ [8,"我雖然靠著基督能放膽吩咐你合宜的事；"],
+ [9,"然而像我這有年紀的保羅，現在又是為基督耶穌被囚的，寧可憑著愛心求你，"],
+ [10,"就是為我在捆鎖中所生的兒子阿尼西母（就是有益處的意思）求你。"],
+ [11,"他從前與你沒有益處，但如今與你我都有益處。"],
+ [12,"我現在打發他親自回你那裡去；他是我心上的人。"],
+ [13,"我本來有意將他留下，在我為福音所受的捆鎖中替你伺候我。"],
+ [14,"但不知道你的意思，我就不願意這樣行，叫你的善行不是出於勉強，乃是出於甘心。"],
+ [15,"他暫時離開你，或者是叫你永遠得著他，"],
+ [16,"不再是奴僕，乃是高過奴僕，是親愛的兄弟。在我實在是如此，何況在你呢！這也不拘是按肉體說，是按主說。"],
+ [17,"你若以我為同伴，就收納他，如同收納我一樣。"],
+ [18,"他若虧負你，或欠你甚麼，都歸在我的帳上；"],
+ [19,"我必償還，這是我保羅親筆寫的。我並不用對你說，連你自己也是虧欠於我。"],
+ [20,"兄弟啊，望你使我在主裡因你得快樂，並望你使我的心在基督裡得暢快。"],
+ [21,"我寫信給你，深信你必順服，知道你所要行的，必過於我所說的。"],
+ [22,"此外你還要給我預備住處；因為我盼望藉著你們的禱告，必蒙恩到你們那裡去。"],
+ [23,"為基督耶穌與我同坐監的以巴弗問你安。"],
+ [24,"與我同工的馬可、亞里達古、底馬、路加也都問你安。"],
+ [25,"願我們主耶穌基督的恩常在你的心裡。阿們！"]
+];
+
+var CATS = ["何人","何處","何時","何事","為何","如何"];
+
+var S1 = [
+ {fact:"保羅、提摩太、腓利門、亞腓亞、亞基布、阿尼西母", ans:"何人",
+  why:"信中出現的人物——寫信的保羅與提摩太、收信的腓利門一家，以及這封信的主角阿尼西母。"},
+ {fact:"「在你家的教會」——腓利門位於歌羅西的家中聚會", ans:"何處",
+  why:"這是一封寄到腓利門家、家庭教會所在之處的信。"},
+ {fact:"保羅「為基督耶穌被囚」、在捆鎖之中的時候", ans:"何時",
+  why:"信中多次提到保羅正在坐監（1、9、10、13 節），這是寫信的時間背景。"},
+ {fact:"阿尼西母原是逃離主人的奴僕，如今信了主，保羅打發他回去", ans:"何事",
+  why:"這是整封信的事件核心：一個逃跑的奴僕悔改信主後，被送回原來的主人那裡。"},
+ {fact:"為叫腓利門接納他——不再當奴僕，而是當親愛的兄弟", ans:"為何",
+  why:"保羅寫信的目的：求腓利門以弟兄之愛接納阿尼西母（16–17 節）。"},
+ {fact:"保羅不用命令，憑愛心求；並願把阿尼西母的虧欠記在自己帳上", ans:"如何",
+  why:"保羅選擇的方式——不是發號施令，而是憑愛勸、甘願代償（8–9、18–19 節）。"}
+];
+
+var S2A = [
+ {t:"在基督裡彼此接納與饒恕，弟兄之愛勝過身分", ok:true},
+ {t:"教會的財務管理與奉獻制度", ok:false},
+ {t:"末世的徵兆與主再來的時間", ok:false},
+ {t:"教會長執的選立章程", ok:false}
+];
+var S2A_FB = "整封信是在勸腓利門「接納」阿尼西母——把曾得罪自己的奴僕，當作親愛的弟兄。這是貫穿全篇的主題。";
+
+var S2B = [ /* correct order top->bottom */
+ {t:"問安（1–3 節）", n:1},
+ {t:"為腓利門感謝與稱讚（4–7 節）", n:2},
+ {t:"為阿尼西母代求（8–21 節）", n:3},
+ {t:"結語與祝福（22–25 節）", n:4}
+];
+var S2B_FB = "這封短信清楚分四段：先問安、再感謝稱讚、進入核心的代求、最後結語祝福。核心訊息落在最長的第三段。";
+
+var S2C = [
+ {t:"阿尼西母原是腓利門逃跑的奴僕，後來在獄中跟著保羅信了主", ok:true},
+ {t:"阿尼西母是保羅的親生兒子", ok:false},
+ {t:"腓利門欠了保羅一大筆錢", ok:false}
+];
+var S2C_FB = "不先知道「奴僕逃跑、後來信主」這個背景，就讀不懂為何保羅說『不再是奴僕，乃是兄弟』有多大的份量。上下文決定了這句話的重量。";
+
+var S3 = [
+ {t:"腓利門書是一封私人書信，所以要把它讀作保羅「憑愛心的勸」，而不是冷冰冰的律法條文。",
+  ok:true, why:"尊重文體：這是私人書信，語氣是勸與求（9 節），不是頒佈律例。讀對文體，才讀得出其中的溫度。"},
+ {t:"保羅是在「命令」腓利門，沒有商量的餘地。",
+  ok:false, why:"誤解作者原意：第 8–9 節說他雖能放膽吩咐，卻『寧可憑著愛心求』，刻意不用命令的口氣。"},
+ {t:"既然 18 節說「歸在我的帳上」，這封信就是在教導：信耶穌就能還清你所有的金錢債務。",
+  ok:false, why:"斷章取義：那是保羅願替阿尼西母個人承擔虧欠的具體行動，被扭曲成一個「發財／清償」的應許，離原意很遠。"},
+ {t:"保羅稱阿尼西母為「我心上的人」「親愛的兄弟」，顯示在基督裡，主僕的身分被弟兄關係超越了。",
+  ok:true, why:"抓住作者原意：保羅正是要腓利門越過主僕關係，以弟兄相待（16–17 節）。"},
+ {t:"這封信沒有明文廢除奴隸制度，所以可以下結論說「聖經支持奴隸制度」。",
+  ok:false, why:"斷章取義／超出文意：保羅沒談制度存廢，而是從福音裡的弟兄關係，從根本改變了人如何待人。用沉默去推出相反的主張並不成立。"}
+];
+
+var S4A = [
+ {t:"要接納曾經得罪你的弟兄，如同接納主自己（17 節）。", ans:"命令",
+  why:"這是保羅對腓利門明確的請求／吩咐——以接納主的態度接納阿尼西母。"},
+ {t:"保羅為阿尼西母代求，並甘願替他承擔虧欠（18–19 節）。", ans:"榜樣",
+  why:"這是保羅活出的榜樣，也預表基督為我們代求、代贖。"},
+ {t:"阿尼西母從「無益」變為「有益」，悔改回轉、勇敢面對舊主（11–12 節）。", ans:"榜樣",
+  why:"阿尼西母的轉變是悔改與承擔的榜樣。"},
+ {t:"在基督裡，破裂的關係能夠復和，弟兄的心彼此「暢快」（7、20 節）。", ans:"應許",
+  why:"這是隱含的應許／盼望：愛裡的接納，會帶來真實的安慰與復和。"},
+ {t:"你與人同有的信心一旦顯出功效，就讓人看見善事是為基督而做（6 節）。", ans:"應許",
+  why:"6 節指向一個應許：活出來的信心會結出果效，叫人認識基督。"}
+];
+var S4_CATS = ["命令","應許","榜樣"];
+
+var S4B = [
+ {t:"主動饒恕一個曾得罪我的人", note:"饒恕不是忘記，而是不再記在帳上。保羅願把虧欠歸在自己帳上——你也可以選擇放下那筆「欠你的」。", ref:"腓 1:18"},
+ {t:"接納一位曾跌倒、想回到教會的弟兄", note:"阿尼西母帶著過去回去，腓利門被求以弟兄相待。教會也是讓人重新被接納的地方。", ref:"腓 1:16–17"},
+ {t:"為一個人切切代求，甚至願意為他承擔", note:"保羅的愛是會付代價的愛。為人代求，有時也意味著願意替他扛一點。", ref:"腓 1:10,19"},
+ {t:"在小事上不勉強人，給人甘心去行的空間", note:"保羅刻意不用命令，好讓腓利門的善行『出於甘心，不是勉強』。愛留白給人選擇。", ref:"腓 1:14"}
+];
+
+/* ---------------- nav ---------------- */
+var SCREENS={intro:"s-intro",read:"s-read",s1:"s-s1",s2:"s-s2",s3:"s-s3",s4:"s-s4",done:"s-done"};
+var STAGEMAP={s1:0,s2:1,s3:2,s4:3};
+var progress=[false,false,false,false];
+var score={obs:0,str:0,intp:0,app:0};
+
+function go(key){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById(SCREENS[key]).classList.add('active');
+  if(key!=='intro'){document.getElementById('topbar').style.display='block';}
+  renderSteps(key);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderSteps(key){
+  var labels=["觀","構","解","用"], names=["觀察","結構","解釋","應用"];
+  var cur = STAGEMAP[key]!==undefined ? STAGEMAP[key] : -1;
+  var html='';
+  for(var i=0;i<4;i++){
+    var cls='step'; if(progress[i])cls+=' done'; if(i===cur)cls+=' cur';
+    html+='<div class="'+cls+'"><div class="seal">'+labels[i]+'</div><small>'+names[i]+'</small></div>';
+    if(i<3){html+='<div class="connector'+(progress[i]?' lit':'')+'"></div>';}
+  }
+  document.getElementById('steps').innerHTML=html;
+}
+
+/* ---------------- intro ---------------- */
+document.getElementById('waxbtn').addEventListener('click',function(){
+  this.classList.add('broken');
+  var self=this;
+  setTimeout(function(){ go('read'); buildLetter(); },420);
+});
+
+function buildLetter(){
+  var el=document.getElementById('lettertext');
+  if(el.dataset.built)return;
+  var html='';
+  VERSES.forEach(function(v,i){
+    var txt=v[1];
+    if(i===0){
+      html+='<p class="salute"><span class="dropcap">為</span><span class="vno">1</span>'+txt.substring(1)+'</p>';
+    }else{
+      html+='<p><span class="vno">'+v[0]+'</span>'+txt+'</p>';
+    }
+  });
+  el.innerHTML=html; el.dataset.built="1";
+}
+
+/* ---------------- stage 1 ---------------- */
+var i1=0;
+function s1render(){
+  document.getElementById('c1').textContent='第 '+(i1+1)+' / '+S1.length+' 題';
+  document.getElementById('fact1').textContent=S1[i1].fact;
+  var o=document.getElementById('opts1'); o.innerHTML='';
+  CATS.forEach(function(c){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=c;
+    b.onclick=function(){s1answer(c,b)};
+    o.appendChild(b);
+  });
+  document.getElementById('fb1').className='feedback';
+  document.getElementById('next1').style.display='none';
+}
+function s1answer(c,btn){
+  var correct=S1[i1].ans;
+  var buttons=document.querySelectorAll('#opts1 .opt');
+  buttons.forEach(function(b){
+    b.disabled=true;
+    if(b.textContent===correct)b.classList.add('right');
+    else if(b===btn)b.classList.add('wrong');
+    else b.classList.add('muted');
+  });
+  var fb=document.getElementById('fb1');
+  if(c===correct){score.obs++; fb.className='feedback good show'; fb.innerHTML='<b>答對了——「'+correct+'」。</b><br>'+S1[i1].why;}
+  else{fb.className='feedback bad show'; fb.innerHTML='<b>這一項屬於「'+correct+'」。</b><br>'+S1[i1].why;}
+  document.getElementById('next1').style.display='block';
+  document.getElementById('next1').textContent = (i1<S1.length-1)?'下一題':'完成第一關';
+}
+function s1next(){
+  if(i1<S1.length-1){i1++; s1render();}
+  else{progress[0]=true; go('s2'); s2init();}
+}
+
+/* ---------------- stage 2 ---------------- */
+function s2init(){
+  // A
+  var oa=document.getElementById('opts2a'); oa.innerHTML='';
+  S2A.forEach(function(opt){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=opt.t;
+    b.onclick=function(){s2a(opt,b)};
+    oa.appendChild(b);
+  });
+  document.getElementById('s2b').style.display='none';
+  document.getElementById('s2c').style.display='none';
+  document.getElementById('next2').style.display='none';
+  document.getElementById('fb2a').className='feedback';
+  s2bReset();
+}
+function s2a(opt,btn){
+  document.querySelectorAll('#opts2a .opt').forEach(function(b){
+    b.disabled=true;
+    if(S2A[ [].indexOf.call(b.parentNode.children,b) ].ok)b.classList.add('right');
+    else if(b===btn)b.classList.add('wrong');
+    else b.classList.add('muted');
+  });
+  var fb=document.getElementById('fb2a');
+  fb.className='feedback '+(opt.ok?'good':'bad')+' show';
+  fb.innerHTML=(opt.ok?'<b>正是如此。</b><br>':'<b>主題其實更聚焦。</b><br>')+S2A_FB;
+  if(opt.ok)score.str++;
+  document.getElementById('s2b').style.display='block';
+}
+/* ordering */
+var seqState=[];
+function s2bReset(){
+  seqState=[];
+  var pool=document.getElementById('pool2b'); pool.innerHTML='';
+  var shuffled=S2B.slice().sort(function(){return Math.random()-0.5});
+  shuffled.forEach(function(item){
+    var c=document.createElement('button'); c.className='chip'; c.dataset.n=item.n;
+    c.innerHTML='<span class="num">?</span>'+item.t;
+    c.onclick=function(){s2bPlace(item,c)};
+    pool.appendChild(c);
+  });
+  document.getElementById('seq2b').innerHTML='';
+  document.getElementById('fb2b').className='feedback';
+  document.getElementById('reset2b').style.display='none';
+}
+function s2bPlace(item,chip){
+  chip.remove();
+  seqState.push(item);
+  redrawSeq();
+  if(seqState.length===S2B.length)s2bCheck();
+}
+function redrawSeq(){
+  var seq=document.getElementById('seq2b'); seq.innerHTML='';
+  seqState.forEach(function(item,idx){
+    var c=document.createElement('button'); c.className='chip placed';
+    c.innerHTML='<span class="num">'+(idx+1)+'</span>'+item.t;
+    c.onclick=function(){ /* tap to pull back last is simplest: rebuild */ s2bPullback(idx); };
+    seq.appendChild(c);
+  });
+}
+function s2bPullback(idx){
+  // return everything from idx onward to pool
+  var removed=seqState.splice(idx);
+  redrawSeq();
+  var pool=document.getElementById('pool2b');
+  removed.forEach(function(item){
+    var c=document.createElement('button'); c.className='chip'; c.dataset.n=item.n;
+    c.innerHTML='<span class="num">?</span>'+item.t;
+    c.onclick=function(){s2bPlace(item,c)};
+    pool.appendChild(c);
+  });
+  document.getElementById('fb2b').className='feedback';
+}
+function s2bCheck(){
+  var ok=seqState.every(function(item,idx){return item.n===idx+1});
+  var seq=document.getElementById('seq2b');
+  var fb=document.getElementById('fb2b');
+  if(ok){
+    score.str++;
+    seq.querySelectorAll('.chip').forEach(function(c){c.classList.add('placed')});
+    fb.className='feedback good show'; fb.innerHTML='<b>順序正確。</b><br>'+S2B_FB;
+    document.getElementById('reset2b').style.display='none';
+    document.getElementById('s2c').style.display='block';
+    s2cInit();
+  }else{
+    seq.querySelectorAll('.chip').forEach(function(c){c.classList.remove('placed');c.classList.add('bad')});
+    fb.className='feedback bad show'; fb.innerHTML='<b>順序還不對。</b>對照經文的節數，從問安開始再排一次。';
+    document.getElementById('reset2b').style.display='block';
+  }
+}
+function s2cInit(){
+  var oc=document.getElementById('opts2c'); oc.innerHTML='';
+  S2C.forEach(function(opt){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=opt.t;
+    b.onclick=function(){s2c(opt,b)};
+    oc.appendChild(b);
+  });
+}
+function s2c(opt,btn){
+  document.querySelectorAll('#opts2c .opt').forEach(function(b,idx){
+    b.disabled=true;
+    if(S2C[idx].ok)b.classList.add('right');
+    else if(b===btn)b.classList.add('wrong');
+    else b.classList.add('muted');
+  });
+  var fb=document.getElementById('fb2c');
+  fb.className='feedback '+(opt.ok?'good':'bad')+' show';
+  fb.innerHTML=(opt.ok?'<b>對，這正是關鍵背景。</b><br>':'<b>再想想上下文。</b><br>')+S2C_FB;
+  if(opt.ok)score.str++;
+  document.getElementById('next2').style.display='block';
+}
+
+/* ---------------- stage 3 ---------------- */
+var i3=0;
+function s3render(){
+  document.getElementById('c3').textContent='第 '+(i3+1)+' / '+S3.length+' 則';
+  document.getElementById('fact3').textContent=S3[i3].t;
+  var g=document.getElementById('g3'),b=document.getElementById('b3');
+  [g,b].forEach(function(x){x.disabled=false;x.className='opt'});
+  document.getElementById('fb3').className='feedback';
+  document.getElementById('next3').style.display='none';
+}
+function s3answer(said){
+  var ok=S3[i3].ok;
+  var g=document.getElementById('g3'),b=document.getElementById('b3');
+  g.disabled=true;b.disabled=true;
+  (ok?g:b).classList.add('right');
+  if(said!==ok)(said?g:b).classList.add('wrong');
+  var fb=document.getElementById('fb3');
+  var correct=said===ok;
+  if(correct)score.intp++;
+  fb.className='feedback '+(correct?'good':'bad')+' show';
+  fb.innerHTML='<b>'+(ok?'這是合宜的讀法。':'這個讀法不合宜。')+'</b><br>'+S3[i3].why;
+  document.getElementById('next3').style.display='block';
+  document.getElementById('next3').textContent=(i3<S3.length-1)?'下一則':'完成第三關';
+}
+function s3next(){
+  if(i3<S3.length-1){i3++; s3render();}
+  else{progress[2]=true; go('s4'); s4init();}
+}
+
+/* ---------------- stage 4 ---------------- */
+var i4=0;
+function s4init(){
+  i4=0; s4render();
+  document.getElementById('s4a').style.display='block';
+  document.getElementById('s4b').style.display='none';
+}
+function s4render(){
+  document.getElementById('c4a').textContent='A・分辨　第 '+(i4+1)+' / '+S4A.length+' 題';
+  document.getElementById('fact4').textContent=S4A[i4].t;
+  var o=document.getElementById('opts4a'); o.innerHTML='';
+  S4_CATS.forEach(function(c){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=c;
+    b.onclick=function(){s4answer(c,b)};
+    o.appendChild(b);
+  });
+  document.getElementById('fb4a').className='feedback';
+  document.getElementById('next4a').style.display='none';
+}
+function s4answer(c,btn){
+  var correct=S4A[i4].ans;
+  document.querySelectorAll('#opts4a .opt').forEach(function(b){
+    b.disabled=true;
+    if(b.textContent===correct)b.classList.add('right');
+    else if(b===btn)b.classList.add('wrong');
+    else b.classList.add('muted');
+  });
+  var fb=document.getElementById('fb4a');
+  var ok=c===correct; if(ok)score.app++;
+  fb.className='feedback '+(ok?'good':'bad')+' show';
+  fb.innerHTML='<b>'+(ok?'答對——':'')+'這是「'+correct+'」。</b><br>'+S4A[i4].why;
+  document.getElementById('next4a').style.display='block';
+  document.getElementById('next4a').textContent=(i4<S4A.length-1)?'下一題':'進入 B・今天如何實踐';
+}
+function s4anext(){
+  if(i4<S4A.length-1){i4++; s4render();}
+  else{
+    document.getElementById('s4a').style.display='none';
+    document.getElementById('s4b').style.display='block';
+    s4bInit();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+function s4bInit(){
+  var c=document.getElementById('commit4b'); c.innerHTML='';
+  S4B.forEach(function(item){
+    var b=document.createElement('button'); b.className='opt'; b.textContent=item.t;
+    b.onclick=function(){s4bPick(item,b)};
+    c.appendChild(b);
+  });
+}
+function s4bPick(item,btn){
+  document.querySelectorAll('#commit4b .opt').forEach(function(b){
+    b.classList.remove('right'); b.classList.add('muted'); b.disabled=false;
+  });
+  btn.classList.remove('muted'); btn.classList.add('right');
+  var n=document.getElementById('note4b');
+  n.className='note show';
+  n.innerHTML=item.note+'<span class="ref">'+item.ref+'</span>';
+  progress[3]=true;
+  document.getElementById('next4b').style.display='block';
+}
+
+/* ---------------- done ---------------- */
+var _origGo=go;
+go=function(key){
+  if(key==='s2' && !document.getElementById('opts2a').children.length){s2init();}
+  if(key==='done'){progress[3]=true; fillScore();}
+  if(key==='s1'){i1=0;s1render();}
+  if(key==='s3' && !document.getElementById('fact3').textContent){i3=0;s3render();}
+  _origGo(key);
+};
+function fillScore(){
+  var total=score.obs+score.str+score.intp+score.app;
+  var max=S1.length + 3 + S3.length + S4A.length; // 6+3+5+5=19
+  document.getElementById('scoreline').textContent='答題正確 '+total+' / '+max+'　·　四個步驟全部走完';
+}
+
+/* init first stage render lazily handled in go() */
+s1render(); s3render();
+</script>
+</body>
+</html>

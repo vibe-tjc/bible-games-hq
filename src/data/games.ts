@@ -54,8 +54,8 @@ export const games: GameCard[] = [
   },
   {
     id: "philemon",
-    title: "腓利門書：和好信使",
-    description: "排列保羅、腓利門與阿尼西母的書信脈絡，透過測驗思想接納、更新與代償的福音功課。",
+    title: "腓利門書・讀經四步",
+    description: "依照觀察、解釋、關聯與應用四步，透過互動問答學習腓利門書的信息。",
     href: "/games/philemon",
     icon: Mail,
     status: "ready",
