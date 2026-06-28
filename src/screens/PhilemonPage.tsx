@@ -11,7 +11,7 @@ export function PhilemonPage() {
         </Link>
       </div>
       <iframe
-        title="腓利門書・讀經四步"
+        title="讀經四步"
         src={`${import.meta.env.BASE_URL}games/philemon-study-game.html`}
         style={{
           display: "block",

@@ -54,8 +54,8 @@ export const games: GameCard[] = [
   },
   {
     id: "philemon",
-    title: "腓利門書・讀經四步",
-    description: "依照觀察、解釋、關聯與應用四步，透過互動問答學習腓利門書的信息。",
+    title: "讀經四步",
+    description: "腓利門書、猶大書，依觀察、結構、解釋、應用四步，透過互動問答研讀書信的信息。",
     href: "/games/philemon",
     icon: Mail,
     status: "ready",
