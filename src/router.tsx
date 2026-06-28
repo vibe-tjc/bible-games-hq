@@ -9,6 +9,7 @@ import { HomePage } from "./screens/HomePage";
 import { HostRoomPage } from "./screens/HostRoomPage";
 import { JesusMinistryMapPage } from "./screens/JesusMinistryMapPage";
 import { PaulJourneysPage } from "./screens/PaulJourneysPage";
+import { PhilemonPage } from "./screens/PhilemonPage";
 
 type BeatitudesSearch = {
   room?: string;
@@ -94,6 +95,12 @@ const paulJourneysRoute = createRoute({
   component: PaulJourneysPage,
 });
 
+const philemonRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/games/philemon",
+  component: PhilemonPage,
+});
+
 const bibleUnitConverterRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/resources/bible-unit-converter",
@@ -114,6 +121,7 @@ const routeTree = rootRoute.addChildren([
   jesusMinistryMapRoute,
   bibleCanonArchiveRoute,
   paulJourneysRoute,
+  philemonRoute,
   bibleUnitConverterRoute,
   bibleWarsRoute,
 ]);

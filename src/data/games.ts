@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Archive, Compass, HeartHandshake, Map, Mountain } from "lucide-react";
+import { Archive, Compass, HeartHandshake, Mail, Map, Mountain } from "lucide-react";
 
 export type GameCard = {
   id: string;
@@ -46,9 +46,18 @@ export const games: GameCard[] = [
   {
     id: "paul-journeys",
     title: "保羅宣道旅程",
-    description: "操作保羅依正確順序連出三次宣道旅程的路線，解鎖每一站的事蹟與經文，可切換手繪古地圖與真實地圖。",
+    description:
+      "操作保羅依正確順序連出三次宣道旅程的路線，解鎖每一站的事蹟與經文，可切換手繪古地圖與真實地圖。",
     href: "/games/paul-journeys",
     icon: Compass,
+    status: "ready",
+  },
+  {
+    id: "philemon",
+    title: "腓利門書：和好信使",
+    description: "排列保羅、腓利門與阿尼西母的書信脈絡，透過測驗思想接納、更新與代償的福音功課。",
+    href: "/games/philemon",
+    icon: Mail,
     status: "ready",
   },
 ];
