@@ -9,7 +9,7 @@ import {
 } from "../data/bibleCanon";
 import { cn } from "../lib/utils";
 
-type GameMode = "easy" | "full";
+type GameMode = "testament-card" | "easy" | "full";
 type PileKey = CanonCategoryId | TestamentKey;
 
 type PileMeta = {
@@ -52,7 +52,7 @@ function shuffleBooks() {
 }
 
 function pileKeys(mode: GameMode): PileKey[] {
-  return mode === "easy" ? ["ot", "nt"] : canonCategories.map((category) => category.id);
+  return mode === "full" ? canonCategories.map((category) => category.id) : ["ot", "nt"];
 }
 
 function createPlaced(mode: GameMode) {
@@ -60,11 +60,11 @@ function createPlaced(mode: GameMode) {
 }
 
 function categoryOf(book: CanonBook, mode: GameMode): PileKey {
-  return mode === "easy" ? book.testament : book.cat;
+  return mode === "full" ? book.cat : book.testament;
 }
 
 function pileMeta(key: PileKey, mode: GameMode): PileMeta {
-  if (mode === "easy") {
+  if (mode !== "full") {
     return key === "ot"
       ? { name: "舊約全書", testament: "ot", color: "#8c3b2e", total: 39 }
       : { name: "新約全書", testament: "nt", color: "#2f4f6b", total: 27 };
@@ -126,7 +126,7 @@ export function BibleCanonArchivePage() {
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
 
   const groups = useMemo(() => {
-    if (mode === "easy") {
+    if (mode !== "full") {
       return [["ot"], ["nt"]] as PileKey[][];
     }
 
@@ -198,8 +198,10 @@ export function BibleCanonArchivePage() {
 
     setMode(nextMode);
     setPlaced(createPlaced(nextMode));
-    setDeck(shuffled.slice(HAND_SIZE));
-    setHand(shuffled.slice(0, HAND_SIZE));
+    const initialHandSize = nextMode === "testament-card" ? 1 : HAND_SIZE;
+
+    setDeck(shuffled.slice(initialHandSize));
+    setHand(shuffled.slice(0, initialHandSize));
     setRevealed(new Set());
     setMisses(0);
     setHints(0);
@@ -329,9 +331,10 @@ export function BibleCanonArchivePage() {
       return next;
     });
 
-    const nextHand = deck.slice(0, HAND_SIZE);
+    const nextHandSize = mode === "testament-card" ? 1 : HAND_SIZE;
+    const nextHand = deck.slice(0, nextHandSize);
     setHand(nextHand);
-    setDeck(deck.slice(HAND_SIZE));
+    setDeck(deck.slice(nextHandSize));
     setSelectedAbbr(null);
     setUsedQuickArchive(true);
 
@@ -436,6 +439,7 @@ export function BibleCanonArchivePage() {
   };
 
   const winTime = startTime ? formatTime(elapsedMs || Date.now() - startTime) : "—";
+  const simpleCard = mode === "testament-card" ? hand[0] : null;
 
   return (
     <section className="canon-game" aria-label="經卷歸檔">
@@ -461,18 +465,86 @@ export function BibleCanonArchivePage() {
         <button className="canon-btn" onClick={handleHint}>
           💡 提示
         </button>
-        <button className="canon-btn" onClick={archiveHand}>
-          ⏩ 歸檔手牌
-        </button>
-        <button className="canon-btn" onClick={archiveAll}>
-          ⏭ 全部歸檔
-        </button>
+        {mode !== "testament-card" ? (
+          <>
+            <button className="canon-btn" onClick={archiveHand}>
+              ⏩ 歸檔手牌
+            </button>
+            <button className="canon-btn" onClick={archiveAll}>
+              ⏭ 全部歸檔
+            </button>
+          </>
+        ) : null}
         <button className="canon-btn" onClick={handleRestart}>
           ↺ 重新開始
         </button>
       </header>
 
-      <main className={cn("canon-main", { "canon-easy-mode": mode === "easy" })}>
+      <main className={cn("canon-main", { "canon-easy-mode": mode !== "full" })}>
+        {mode === "testament-card" ? (
+          <div className="canon-simple-stage" aria-label="新舊約分類模式">
+            <div className="canon-simple-board">
+              <button
+                className={cn("canon-simple-choice ot", {
+                  hinted: hintPile === "ot",
+                  reject: rejectPile === "ot",
+                })}
+                data-canon-pile-key="ot"
+                disabled={!simpleCard || finished}
+                onClick={(event) => simpleCard && tryPlace(simpleCard, "ot", event.currentTarget)}
+                type="button"
+              >
+                <span>舊約</span>
+                <small>{placed.ot?.length ?? 0} / 39 卷</small>
+              </button>
+
+              <div className="canon-simple-card-wrap">
+                <div className="canon-deck-stack canon-simple-deck">
+                  <div>剩餘牌堆</div>
+                  <div className="canon-deck-n">{deck.length}</div>
+                  <div>卷</div>
+                </div>
+                {simpleCard ? (
+                  <article className="canon-simple-card">
+                    <div className="canon-simple-card-kicker">抽到的經卷</div>
+                    <div className="canon-simple-card-abbr canon-serif">{simpleCard.abbr}</div>
+                    <h2>{simpleCard.name}</h2>
+                    <div className="canon-simple-feature">
+                      <b>特色：</b>
+                      {simpleCard.theme}
+                    </div>
+                    {simpleCard.clue ? (
+                      <div className="canon-simple-feature muted">
+                        <b>線索：</b>
+                        {simpleCard.clue}
+                      </div>
+                    ) : null}
+                    <div className="canon-simple-question">這卷書屬於舊約還是新約？</div>
+                  </article>
+                ) : (
+                  <div className="canon-simple-card empty">所有經卷都已分類完成</div>
+                )}
+              </div>
+
+              <button
+                className={cn("canon-simple-choice nt", {
+                  hinted: hintPile === "nt",
+                  reject: rejectPile === "nt",
+                })}
+                data-canon-pile-key="nt"
+                disabled={!simpleCard || finished}
+                onClick={(event) => simpleCard && tryPlace(simpleCard, "nt", event.currentTarget)}
+                type="button"
+              >
+                <span>新約</span>
+                <small>{placed.nt?.length ?? 0} / 27 卷</small>
+              </button>
+            </div>
+            <p className="canon-simple-tip">
+              每次只抽一張牌，閱讀經卷名稱與特色後，點選「舊約」或「新約」完成分類。
+            </p>
+          </div>
+        ) : (
         <div className="canon-shelves">
           {(["ot", "nt"] as TestamentKey[]).map((testament, groupIndex) => (
             <section className={cn("canon-testament", testament)} key={testament}>
@@ -530,8 +602,10 @@ export function BibleCanonArchivePage() {
             </section>
           ))}
         </div>
+        )}
       </main>
 
+      {mode !== "testament-card" ? (
       <div className="canon-hand-area">
         <div className="canon-hand-inner">
           <div className="canon-deck-stack">
@@ -577,6 +651,7 @@ export function BibleCanonArchivePage() {
           字角落的「卷」鈕可查看經卷主題。
         </div>
       </div>
+      ) : null}
 
       {modalBook ? (
         <div className="canon-overlay show" onClick={() => setModalBook(null)}>
@@ -633,12 +708,24 @@ export function BibleCanonArchivePage() {
               把打散的經卷一一歸回原位，由小而大認識：<b>各卷 → 大分類 → 新舊約</b>。
             </div>
             <div className="canon-mode-grid">
+              <button
+                className="canon-mode-card"
+                onClick={() => startGame("testament-card")}
+                type="button"
+              >
+                <div className="canon-mode-title">
+                  抽卡・新舊約分類 <span className="canon-mode-badge nt">每次 1 張</span>
+                </div>
+                <div className="canon-mode-desc">
+                  像抽撲克牌一樣，一次翻開一卷書。閱讀經卷名稱與特色後，判斷它屬於舊約或新約。
+                </div>
+              </button>
               <button className="canon-mode-card" onClick={() => startGame("easy")} type="button">
                 <div className="canon-mode-title">
                   入門・分辨新舊約 <span className="canon-mode-badge nt">2 座書架</span>
                 </div>
                 <div className="canon-mode-desc">
-                  只需判斷每卷書屬於「舊約」或「新約」。適合初次接觸聖經結構的學員暖身。
+                  一次持有多張經卷牌，拖曳到「舊約」或「新約」書架。適合熟悉抽卡分類操作。
                 </div>
               </button>
               <button className="canon-mode-card" onClick={() => startGame("full")} type="button">
@@ -660,7 +747,7 @@ export function BibleCanonArchivePage() {
       {showWin ? (
         <div className="canon-overlay show">
           <div className="canon-panel">
-            <h2>{mode === "easy" ? "新舊約分辨完成" : "全卷歸檔完成"}</h2>
+            <h2>{mode !== "full" ? "新舊約分辨完成" : "全卷歸檔完成"}</h2>
             <div className="canon-panel-sub">
               「聖經都是神所默示的，於教訓、督責、使人歸正、教導人學義都是有益的。」（提後三16）
             </div>
