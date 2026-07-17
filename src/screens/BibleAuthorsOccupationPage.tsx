@@ -34,7 +34,7 @@ export function BibleAuthorsOccupationPage() {
   const [matchedIds, setMatchedIds] = useState(() => new Set<string>());
   const [selection, setSelection] = useState<Selection>({ personId: null, occupationId: null });
   const [misses, setMisses] = useState(0);
-  const [message, setMessage] = useState("先點左邊一位人名，再點右邊對應的職業與經節線索。");
+  const [message, setMessage] = useState("先點上方的職業與經節線索，再到下方點出對應的人名。");
   const [matchLines, setMatchLines] = useState<MatchLine[]>([]);
   const [latestMatchId, setLatestMatchId] = useState<string | null>(null);
 
@@ -65,10 +65,10 @@ export function BibleAuthorsOccupationPage() {
         return [
           {
             id,
-            x1: personRect.right - stageRect.left,
-            y1: personRect.top + personRect.height / 2 - stageRect.top,
-            x2: occupationRect.left - stageRect.left,
-            y2: occupationRect.top + occupationRect.height / 2 - stageRect.top,
+            x1: occupationRect.left + occupationRect.width / 2 - stageRect.left + stage.scrollLeft,
+            y1: occupationRect.bottom - stageRect.top,
+            x2: personRect.left + personRect.width / 2 - stageRect.left + stage.scrollLeft,
+            y2: personRect.top - stageRect.top,
           },
         ];
       });
@@ -77,8 +77,13 @@ export function BibleAuthorsOccupationPage() {
     };
 
     updateLines();
+    const stage = stageRef.current;
     window.addEventListener("resize", updateLines);
-    return () => window.removeEventListener("resize", updateLines);
+    stage?.addEventListener("scroll", updateLines);
+    return () => {
+      window.removeEventListener("resize", updateLines);
+      stage?.removeEventListener("scroll", updateLines);
+    };
   }, [matchedIds, round]);
 
   const resetGame = () => {
@@ -86,7 +91,7 @@ export function BibleAuthorsOccupationPage() {
     setMatchedIds(new Set());
     setSelection({ personId: null, occupationId: null });
     setMisses(0);
-    setMessage("先點左邊一位人名，再點右邊對應的職業與經節線索。");
+    setMessage("先點上方的職業與經節線索，再到下方點出對應的人名。");
     setLatestMatchId(null);
     setMatchLines([]);
   };
@@ -112,7 +117,7 @@ export function BibleAuthorsOccupationPage() {
     setMisses((value) => value + 1);
     setSelection({ personId: null, occupationId: null });
     setLatestMatchId(null);
-    setMessage("還不是這一組，再觀察右邊經節中的職業、身份或書卷線索。");
+    setMessage("還不是這一組，再觀察上方經節中的職業、身份或書卷線索。");
   };
 
   const selectPerson = (id: string) => {
@@ -138,7 +143,7 @@ export function BibleAuthorsOccupationPage() {
         <h1>神使用各行各業的人寫下祂的話</h1>
         <p>
           聖經的作者與重要見證人來自不同背景：農牧者、醫生、國王、漁夫、稅吏、文士……
-          請把左邊的「人名」連到右邊對應的「職業與經節線索」。
+          請把上方的「職業與經節線索」連到下方對應的「人名」。
         </p>
         <div className="authors-toolbar">
           <span>
@@ -157,92 +162,90 @@ export function BibleAuthorsOccupationPage() {
         {isComplete ? "全部配對完成！你看見神能使用各種職業與背景的人。" : message}
       </div>
 
-      <main className="authors-match-stage" ref={stageRef}>
-        <svg className="authors-lines" aria-hidden="true">
-          {matchLines.map((line) => {
-            const midX = (line.x1 + line.x2) / 2;
-            return (
-              <path
-                className={cn("authors-match-line", { latest: line.id === latestMatchId })}
-                key={line.id}
-                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
-                fill="none"
-                pathLength={1}
-              />
-            );
-          })}
-        </svg>
+      <div className="authors-match-stage" ref={stageRef}>
+        <div className="authors-match-inner">
+          <svg className="authors-lines" aria-hidden="true">
+            {matchLines.map((line) => {
+              const midY = (line.y1 + line.y2) / 2;
+              return (
+                <path
+                  className={cn("authors-match-line", { latest: line.id === latestMatchId })}
+                  key={line.id}
+                  d={`M ${line.x1} ${line.y1} C ${line.x1} ${midY}, ${line.x2} ${midY}, ${line.x2} ${line.y2}`}
+                  fill="none"
+                  pathLength={1}
+                />
+              );
+            })}
+          </svg>
 
-        <section className="authors-zone authors-person-zone" aria-labelledby="authors-people-title">
-          <div className="authors-zone-title">
-            <h2 id="authors-people-title">人名</h2>
-            <span>先點這邊</span>
-          </div>
-          <div className="authors-person-column">
-            {personCards.map((item) => (
-              <button
-                className={cn("authors-person-card", {
-                  selected: selection.personId === item.id,
-                  matched: matchedIds.has(item.id),
-                })}
-                disabled={matchedIds.has(item.id)}
-                key={item.id}
-                onClick={() => selectPerson(item.id)}
-                ref={(element) => {
-                  personRefs.current[item.id] = element;
-                }}
-                type="button"
-              >
-                <span className="authors-illus" aria-hidden="true">
-                  {item.personIcon}
-                </span>
-                <span className="authors-person-text">
-                  <strong>{item.person}</strong>
-                  <span>{item.bookHint}</span>
-                </span>
-                <span className="authors-dot authors-dot-right" aria-hidden="true" />
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className="authors-zone authors-occupation-zone"
-          aria-labelledby="authors-occupations-title"
-        >
-          <div className="authors-zone-title">
-            <h2 id="authors-occupations-title">職業與經節線索</h2>
-            <span>再點這邊</span>
-          </div>
-          <div className="authors-occupation-column">
-            {occupationCards.map((item) => (
-              <button
-                className={cn("authors-occupation-card", {
-                  selected: selection.occupationId === item.id,
-                  matched: matchedIds.has(item.id),
-                })}
-                disabled={matchedIds.has(item.id)}
-                key={item.id}
-                onClick={() => selectOccupation(item.id)}
-                ref={(element) => {
-                  occupationRefs.current[item.id] = element;
-                }}
-                type="button"
-              >
-                <span className="authors-dot authors-dot-left" aria-hidden="true" />
-                <span className="authors-illus authors-illus-job" aria-hidden="true">
-                  {item.occupationIcon}
-                </span>
-                <span className="authors-occupation-text">
+          <section
+            className="authors-zone authors-occupation-zone"
+            aria-labelledby="authors-occupations-title"
+          >
+            <div className="authors-zone-title">
+              <h2 id="authors-occupations-title">職業與經節線索</h2>
+              <span>先點這一排</span>
+            </div>
+            <div className="authors-occupation-row">
+              {occupationCards.map((item) => (
+                <button
+                  className={cn("authors-occupation-card", {
+                    selected: selection.occupationId === item.id,
+                    matched: matchedIds.has(item.id),
+                  })}
+                  disabled={matchedIds.has(item.id)}
+                  key={item.id}
+                  onClick={() => selectOccupation(item.id)}
+                  ref={(element) => {
+                    occupationRefs.current[item.id] = element;
+                  }}
+                  type="button"
+                >
+                  <span className="authors-illus authors-illus-job" aria-hidden="true">
+                    {item.occupationIcon}
+                  </span>
                   <span className="authors-job">{item.occupation}</span>
                   <span className="authors-ref">{item.verseRef}</span>
                   <p>「{item.verseText}」</p>
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-      </main>
+                  <span className="authors-dot authors-dot-bottom" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="authors-zone authors-person-zone" aria-labelledby="authors-people-title">
+            <div className="authors-zone-title">
+              <h2 id="authors-people-title">人名</h2>
+              <span>再點這一排</span>
+            </div>
+            <div className="authors-person-row">
+              {personCards.map((item) => (
+                <button
+                  className={cn("authors-person-card", {
+                    selected: selection.personId === item.id,
+                    matched: matchedIds.has(item.id),
+                  })}
+                  disabled={matchedIds.has(item.id)}
+                  key={item.id}
+                  onClick={() => selectPerson(item.id)}
+                  ref={(element) => {
+                    personRefs.current[item.id] = element;
+                  }}
+                  type="button"
+                >
+                  <span className="authors-dot authors-dot-top" aria-hidden="true" />
+                  <span className="authors-illus" aria-hidden="true">
+                    {item.personIcon}
+                  </span>
+                  <strong>{item.person}</strong>
+                  <span>{item.bookHint}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
 
       <footer className="authors-note">
         註：部分書卷作者採傳統歸屬或書中人物線索整理；遊戲重點在認識神如何使用不同背景的人事奉祂。
