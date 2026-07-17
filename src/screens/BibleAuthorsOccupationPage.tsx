@@ -1,10 +1,18 @@
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { bibleAuthorOccupationMatches } from "../data/bibleAuthors";
 import { cn } from "../lib/utils";
 
 type Selection = {
-  clueId: string | null;
   personId: string | null;
+  occupationId: string | null;
+};
+
+type MatchLine = {
+  id: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
 };
 
 function shuffle<T>(items: T[]) {
@@ -19,50 +27,92 @@ function shuffle<T>(items: T[]) {
 }
 
 export function BibleAuthorsOccupationPage() {
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const personRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const occupationRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [round, setRound] = useState(1);
   const [matchedIds, setMatchedIds] = useState(() => new Set<string>());
-  const [selection, setSelection] = useState<Selection>({ clueId: null, personId: null });
+  const [selection, setSelection] = useState<Selection>({ personId: null, occupationId: null });
   const [misses, setMisses] = useState(0);
-  const [message, setMessage] = useState("先讀上方經節線索，再從下方選出對應的人名。");
+  const [message, setMessage] = useState("先從上方選一位人名，再到下方找出他的職業與經節線索。");
+  const [matchLines, setMatchLines] = useState<MatchLine[]>([]);
+  const [latestMatchId, setLatestMatchId] = useState<string | null>(null);
 
-  const clueCards = useMemo(() => shuffle(bibleAuthorOccupationMatches), [round]);
   const personCards = useMemo(() => shuffle(bibleAuthorOccupationMatches), [round]);
+  const occupationCards = useMemo(() => shuffle(bibleAuthorOccupationMatches), [round]);
   const isComplete = matchedIds.size === bibleAuthorOccupationMatches.length;
+
+  useLayoutEffect(() => {
+    const updateLines = () => {
+      const stage = stageRef.current;
+
+      if (!stage) {
+        return;
+      }
+
+      const stageRect = stage.getBoundingClientRect();
+      const nextLines = Array.from(matchedIds).flatMap((id) => {
+        const person = personRefs.current[id];
+        const occupation = occupationRefs.current[id];
+
+        if (!person || !occupation) {
+          return [];
+        }
+
+        const personRect = person.getBoundingClientRect();
+        const occupationRect = occupation.getBoundingClientRect();
+
+        return [
+          {
+            id,
+            x1: personRect.left + personRect.width / 2 - stageRect.left,
+            y1: personRect.bottom - stageRect.top,
+            x2: occupationRect.left + occupationRect.width / 2 - stageRect.left,
+            y2: occupationRect.top - stageRect.top,
+          },
+        ];
+      });
+
+      setMatchLines(nextLines);
+    };
+
+    updateLines();
+    window.addEventListener("resize", updateLines);
+    return () => window.removeEventListener("resize", updateLines);
+  }, [matchedIds, round]);
 
   const resetGame = () => {
     setRound((value) => value + 1);
     setMatchedIds(new Set());
-    setSelection({ clueId: null, personId: null });
+    setSelection({ personId: null, occupationId: null });
     setMisses(0);
-    setMessage("先讀上方經節線索，再從下方選出對應的人名。");
+    setMessage("先從上方選一位人名，再到下方找出他的職業與經節線索。");
+    setLatestMatchId(null);
+    setMatchLines([]);
   };
 
   const tryMatch = (nextSelection: Selection) => {
-    if (!nextSelection.clueId || !nextSelection.personId) {
+    if (!nextSelection.personId || !nextSelection.occupationId) {
       setSelection(nextSelection);
       return;
     }
 
-    if (nextSelection.clueId === nextSelection.personId) {
-      const item = bibleAuthorOccupationMatches.find((match) => match.id === nextSelection.clueId)!;
+    if (nextSelection.personId === nextSelection.occupationId) {
+      const item = bibleAuthorOccupationMatches.find(
+        (match) => match.id === nextSelection.personId,
+      )!;
 
       setMatchedIds((current) => new Set(current).add(item.id));
-      setSelection({ clueId: null, personId: null });
+      setSelection({ personId: null, occupationId: null });
+      setLatestMatchId(item.id);
       setMessage(`配對成功：${item.person}──${item.occupation}。${item.note}`);
       return;
     }
 
     setMisses((value) => value + 1);
-    setSelection({ clueId: null, personId: null });
-    setMessage("還不是這一位，再觀察經節中的職業、身份或書卷線索。 ");
-  };
-
-  const selectClue = (id: string) => {
-    if (matchedIds.has(id)) {
-      return;
-    }
-
-    tryMatch({ ...selection, clueId: id });
+    setSelection({ personId: null, occupationId: null });
+    setLatestMatchId(null);
+    setMessage("還不是這一組，再觀察下方經節中的職業、身份或書卷線索。");
   };
 
   const selectPerson = (id: string) => {
@@ -73,6 +123,14 @@ export function BibleAuthorsOccupationPage() {
     tryMatch({ ...selection, personId: id });
   };
 
+  const selectOccupation = (id: string) => {
+    if (matchedIds.has(id)) {
+      return;
+    }
+
+    tryMatch({ ...selection, occupationId: id });
+  };
+
   return (
     <section className="authors-game" aria-label="聖經作者職業連連看">
       <header className="authors-hero">
@@ -80,7 +138,7 @@ export function BibleAuthorsOccupationPage() {
         <h1>神使用各行各業的人寫下祂的話</h1>
         <p>
           聖經的作者與重要見證人來自不同背景：農牧者、醫生、國王、漁夫、稅吏、文士……
-          請把「經節線索」與「人名職業」配對起來。
+          請把上方「人名」連到下方對應的「職業與經節線索」。
         </p>
         <div className="authors-toolbar">
           <span>
@@ -99,38 +157,27 @@ export function BibleAuthorsOccupationPage() {
         {isComplete ? "全部配對完成！你看見神能使用各種職業與背景的人。" : message}
       </div>
 
-      <main className="authors-board">
-        <section className="authors-zone" aria-labelledby="authors-clues-title">
-          <div className="authors-zone-title">
-            <h2 id="authors-clues-title">上方：經節與線索</h2>
-            <span>先選一張</span>
-          </div>
-          <div className="authors-clue-grid">
-            {clueCards.map((item) => (
-              <button
-                className={cn("authors-clue-card", {
-                  selected: selection.clueId === item.id,
-                  matched: matchedIds.has(item.id),
-                })}
-                disabled={matchedIds.has(item.id)}
-                key={item.id}
-                onClick={() => selectClue(item.id)}
-                type="button"
-              >
-                <span className="authors-ref">{item.verseRef}</span>
-                <p>「{item.verseText}」</p>
-                <small>{item.bookHint}</small>
-              </button>
-            ))}
-          </div>
-        </section>
+      <main className="authors-match-stage" ref={stageRef}>
+        <svg className="authors-lines" aria-hidden="true">
+          {matchLines.map((line) => (
+            <line
+              className={cn("authors-match-line", { latest: line.id === latestMatchId })}
+              key={line.id}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              pathLength={1}
+            />
+          ))}
+        </svg>
 
-        <section className="authors-zone" aria-labelledby="authors-people-title">
+        <section className="authors-zone authors-person-zone" aria-labelledby="authors-people-title">
           <div className="authors-zone-title">
-            <h2 id="authors-people-title">下方：人名與職業</h2>
-            <span>找出對應者</span>
+            <h2 id="authors-people-title">上方：人名</h2>
+            <span>先選一位</span>
           </div>
-          <div className="authors-person-grid">
+          <div className="authors-person-grid authors-person-row">
             {personCards.map((item) => (
               <button
                 className={cn("authors-person-card", {
@@ -140,10 +187,44 @@ export function BibleAuthorsOccupationPage() {
                 disabled={matchedIds.has(item.id)}
                 key={item.id}
                 onClick={() => selectPerson(item.id)}
+                ref={(element) => {
+                  personRefs.current[item.id] = element;
+                }}
                 type="button"
               >
                 <strong>{item.person}</strong>
-                <span>{item.occupation}</span>
+                <span>{item.bookHint}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className="authors-zone authors-occupation-zone"
+          aria-labelledby="authors-occupations-title"
+        >
+          <div className="authors-zone-title">
+            <h2 id="authors-occupations-title">下方：職業與經節線索</h2>
+            <span>找出對應職業</span>
+          </div>
+          <div className="authors-clue-grid authors-occupation-grid">
+            {occupationCards.map((item) => (
+              <button
+                className={cn("authors-clue-card authors-occupation-card", {
+                  selected: selection.occupationId === item.id,
+                  matched: matchedIds.has(item.id),
+                })}
+                disabled={matchedIds.has(item.id)}
+                key={item.id}
+                onClick={() => selectOccupation(item.id)}
+                ref={(element) => {
+                  occupationRefs.current[item.id] = element;
+                }}
+                type="button"
+              >
+                <span className="authors-job">{item.occupation}</span>
+                <span className="authors-ref">{item.verseRef}</span>
+                <p>「{item.verseText}」</p>
               </button>
             ))}
           </div>
