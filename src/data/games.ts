@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Archive, Compass, HeartHandshake, Mail, Map, Mountain } from "lucide-react";
+import { Archive, Briefcase, Compass, HeartHandshake, Mail, Map, Mountain } from "lucide-react";
 
 export type GameCard = {
   id: string;
@@ -41,6 +41,14 @@ export const games: GameCard[] = [
     description: "把聖經六十六卷歸回新舊約與九大分類書架，透過牌局熟悉正典結構。",
     href: "/games/bible-canon-archive",
     icon: Archive,
+    status: "ready",
+  },
+  {
+    id: "bible-authors-occupation",
+    title: "聖經作者職業連連看",
+    description: "把經節線索與人名職業配對，認識神如何使用農夫、醫生、國王、漁夫等不同背景的人。",
+    href: "/games/bible-authors-occupation",
+    icon: Briefcase,
     status: "ready",
   },
   {
