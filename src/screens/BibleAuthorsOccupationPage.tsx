@@ -34,7 +34,7 @@ export function BibleAuthorsOccupationPage() {
   const [matchedIds, setMatchedIds] = useState(() => new Set<string>());
   const [selection, setSelection] = useState<Selection>({ personId: null, occupationId: null });
   const [misses, setMisses] = useState(0);
-  const [message, setMessage] = useState("先從上方選一位人名，再到下方找出他的職業與經節線索。");
+  const [message, setMessage] = useState("先點左邊一位人名，再點右邊對應的職業與經節線索。");
   const [matchLines, setMatchLines] = useState<MatchLine[]>([]);
   const [latestMatchId, setLatestMatchId] = useState<string | null>(null);
 
@@ -65,10 +65,10 @@ export function BibleAuthorsOccupationPage() {
         return [
           {
             id,
-            x1: personRect.left + personRect.width / 2 - stageRect.left,
-            y1: personRect.bottom - stageRect.top,
-            x2: occupationRect.left + occupationRect.width / 2 - stageRect.left,
-            y2: occupationRect.top - stageRect.top,
+            x1: personRect.right - stageRect.left,
+            y1: personRect.top + personRect.height / 2 - stageRect.top,
+            x2: occupationRect.left - stageRect.left,
+            y2: occupationRect.top + occupationRect.height / 2 - stageRect.top,
           },
         ];
       });
@@ -86,7 +86,7 @@ export function BibleAuthorsOccupationPage() {
     setMatchedIds(new Set());
     setSelection({ personId: null, occupationId: null });
     setMisses(0);
-    setMessage("先從上方選一位人名，再到下方找出他的職業與經節線索。");
+    setMessage("先點左邊一位人名，再點右邊對應的職業與經節線索。");
     setLatestMatchId(null);
     setMatchLines([]);
   };
@@ -112,7 +112,7 @@ export function BibleAuthorsOccupationPage() {
     setMisses((value) => value + 1);
     setSelection({ personId: null, occupationId: null });
     setLatestMatchId(null);
-    setMessage("還不是這一組，再觀察下方經節中的職業、身份或書卷線索。");
+    setMessage("還不是這一組，再觀察右邊經節中的職業、身份或書卷線索。");
   };
 
   const selectPerson = (id: string) => {
@@ -138,7 +138,7 @@ export function BibleAuthorsOccupationPage() {
         <h1>神使用各行各業的人寫下祂的話</h1>
         <p>
           聖經的作者與重要見證人來自不同背景：農牧者、醫生、國王、漁夫、稅吏、文士……
-          請把上方「人名」連到下方對應的「職業與經節線索」。
+          請把左邊的「人名」連到右邊對應的「職業與經節線索」。
         </p>
         <div className="authors-toolbar">
           <span>
@@ -159,25 +159,26 @@ export function BibleAuthorsOccupationPage() {
 
       <main className="authors-match-stage" ref={stageRef}>
         <svg className="authors-lines" aria-hidden="true">
-          {matchLines.map((line) => (
-            <line
-              className={cn("authors-match-line", { latest: line.id === latestMatchId })}
-              key={line.id}
-              x1={line.x1}
-              y1={line.y1}
-              x2={line.x2}
-              y2={line.y2}
-              pathLength={1}
-            />
-          ))}
+          {matchLines.map((line) => {
+            const midX = (line.x1 + line.x2) / 2;
+            return (
+              <path
+                className={cn("authors-match-line", { latest: line.id === latestMatchId })}
+                key={line.id}
+                d={`M ${line.x1} ${line.y1} C ${midX} ${line.y1}, ${midX} ${line.y2}, ${line.x2} ${line.y2}`}
+                fill="none"
+                pathLength={1}
+              />
+            );
+          })}
         </svg>
 
         <section className="authors-zone authors-person-zone" aria-labelledby="authors-people-title">
           <div className="authors-zone-title">
-            <h2 id="authors-people-title">上方：人名</h2>
-            <span>先選一位</span>
+            <h2 id="authors-people-title">人名</h2>
+            <span>先點這邊</span>
           </div>
-          <div className="authors-person-grid authors-person-row">
+          <div className="authors-person-column">
             {personCards.map((item) => (
               <button
                 className={cn("authors-person-card", {
@@ -192,8 +193,14 @@ export function BibleAuthorsOccupationPage() {
                 }}
                 type="button"
               >
-                <strong>{item.person}</strong>
-                <span>{item.bookHint}</span>
+                <span className="authors-illus" aria-hidden="true">
+                  {item.personIcon}
+                </span>
+                <span className="authors-person-text">
+                  <strong>{item.person}</strong>
+                  <span>{item.bookHint}</span>
+                </span>
+                <span className="authors-dot authors-dot-right" aria-hidden="true" />
               </button>
             ))}
           </div>
@@ -204,13 +211,13 @@ export function BibleAuthorsOccupationPage() {
           aria-labelledby="authors-occupations-title"
         >
           <div className="authors-zone-title">
-            <h2 id="authors-occupations-title">下方：職業與經節線索</h2>
-            <span>找出對應職業</span>
+            <h2 id="authors-occupations-title">職業與經節線索</h2>
+            <span>再點這邊</span>
           </div>
-          <div className="authors-clue-grid authors-occupation-grid">
+          <div className="authors-occupation-column">
             {occupationCards.map((item) => (
               <button
-                className={cn("authors-clue-card authors-occupation-card", {
+                className={cn("authors-occupation-card", {
                   selected: selection.occupationId === item.id,
                   matched: matchedIds.has(item.id),
                 })}
@@ -222,9 +229,15 @@ export function BibleAuthorsOccupationPage() {
                 }}
                 type="button"
               >
-                <span className="authors-job">{item.occupation}</span>
-                <span className="authors-ref">{item.verseRef}</span>
-                <p>「{item.verseText}」</p>
+                <span className="authors-dot authors-dot-left" aria-hidden="true" />
+                <span className="authors-illus authors-illus-job" aria-hidden="true">
+                  {item.occupationIcon}
+                </span>
+                <span className="authors-occupation-text">
+                  <span className="authors-job">{item.occupation}</span>
+                  <span className="authors-ref">{item.verseRef}</span>
+                  <p>「{item.verseText}」</p>
+                </span>
               </button>
             ))}
           </div>

@@ -1,7 +1,9 @@
 export type BibleAuthorOccupationMatch = {
   id: string;
   person: string;
+  personIcon: string;
   occupation: string;
+  occupationIcon: string;
   bookHint: string;
   verseRef: string;
   verseText: string;
@@ -12,7 +14,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "amos",
     person: "阿摩司",
+    personIcon: "🧑‍🌾",
     occupation: "牧人、修理桑樹的人",
+    occupationIcon: "🌳",
+
     bookHint: "小先知書",
     verseRef: "摩七14-15",
     verseText:
@@ -22,7 +27,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "luke",
     person: "路加",
+    personIcon: "🧑‍⚕️",
     occupation: "醫生",
+    occupationIcon: "⚕️",
+
     bookHint: "福音書、使徒行傳",
     verseRef: "西四14",
     verseText: "所親愛的醫生路加和底馬問你們安。",
@@ -31,7 +39,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "david",
     person: "大衛",
+    personIcon: "👑",
     occupation: "牧羊人、國王、詩人",
+    occupationIcon: "🎶",
+
     bookHint: "詩篇的重要作者",
     verseRef: "撒下二十三1",
     verseText: "耶西的兒子大衛得居高位，是雅各神所膏的，作以色列的美歌者……",
@@ -40,7 +51,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "solomon",
     person: "所羅門",
+    personIcon: "📜",
     occupation: "國王、智慧人",
+    occupationIcon: "🦉",
+
     bookHint: "箴言、傳道書、雅歌傳統歸屬",
     verseRef: "傳一1",
     verseText: "在耶路撒冷作王、大衛的兒子、傳道者的言語。",
@@ -49,7 +63,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "moses",
     person: "摩西",
+    personIcon: "🪧",
     occupation: "牧羊人、領袖、律法頒布者",
+    occupationIcon: "📖",
+
     bookHint: "律法書傳統歸屬",
     verseRef: "出三1",
     verseText: "摩西牧養他岳父米甸祭司葉忒羅的羊群……到了神的山，就是何烈山。",
@@ -58,7 +75,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "peter",
     person: "彼得",
+    personIcon: "🎣",
     occupation: "漁夫、使徒",
+    occupationIcon: "🐟",
+
     bookHint: "彼得前後書",
     verseRef: "太四18-19",
     verseText: "耶穌看見弟兄二人……彼得和他兄弟安得烈，在海裡撒網；他們本是打魚的。",
@@ -67,7 +87,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "matthew",
     person: "馬太",
+    personIcon: "🧾",
     occupation: "稅吏",
+    occupationIcon: "💰",
+
     bookHint: "馬太福音",
     verseRef: "太九9",
     verseText: "耶穌看見一個人名叫馬太，坐在稅關上，就對他說：你跟從我來。",
@@ -76,7 +99,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "paul",
     person: "保羅",
+    personIcon: "⛺",
     occupation: "製帳棚者、使徒",
+    occupationIcon: "🧵",
+
     bookHint: "保羅書信",
     verseRef: "徒十八3",
     verseText: "他們本是製造帳棚為業。保羅因與他們同業，就和他們同住做工。",
@@ -85,7 +111,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "ezra",
     person: "以斯拉",
+    personIcon: "🖋️",
     occupation: "文士、祭司",
+    occupationIcon: "📜",
+
     bookHint: "以斯拉記",
     verseRef: "拉七6",
     verseText: "這以斯拉從巴比倫上來，他是敏捷的文士，通達耶和華以色列神所賜摩西的律法書。",
@@ -94,7 +123,10 @@ export const bibleAuthorOccupationMatches: BibleAuthorOccupationMatch[] = [
   {
     id: "nehemiah",
     person: "尼希米",
+    personIcon: "🍷",
     occupation: "酒政、省長",
+    occupationIcon: "🏛️",
+
     bookHint: "尼希米記",
     verseRef: "尼一11",
     verseText: "我是作王酒政的。",
